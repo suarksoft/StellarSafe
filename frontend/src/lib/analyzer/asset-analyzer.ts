@@ -67,7 +67,7 @@ export class AssetAnalyzer {
       };
 
       // Save to history (async, don't wait)
-      assetDatabase.saveAnalysisHistory('asset', analysis).catch(console.error);
+      // assetDatabase.saveAnalysisHistory('asset', analysis).catch(console.error);
 
       return analysis;
     } catch (error) {
