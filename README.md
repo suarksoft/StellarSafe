@@ -1,6 +1,6 @@
 # StellarSafe - Stellar Blockchain Güvenlik Platformu
 
-![StellarSafe Logo](https://via.placeholder.com/800x200/1e293b/ffffff?text=StellarSafe)
+https://stellar-safe-liard.vercel.app
 
 ## 🌟 Proje Hakkında
 
