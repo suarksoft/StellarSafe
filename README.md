@@ -378,13 +378,7 @@ soroban contract build
 
 Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
 
-## 📞 İletişim
 
-- **Website**: https://stellarsafe.io
-- **Email**: info@stellarsafe.io
-- **Twitter**: @StellarSafe
-- **Discord**: https://discord.gg/stellarsafe
-- **GitHub**: https://github.com/stellarsafe
 
 ## 🙏 Teşekkürler
 
