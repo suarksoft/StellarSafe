@@ -101,7 +101,7 @@ function ContactDetails() {
         Our team
       </h2>
       <p className="mt-6 text-base text-neutral-600">
-        We're a distributed team working remotely to make Stellar safer for everyone. 
+        We&apos;re a distributed team working remotely to make Stellar safer for everyone. 
         Reach out to us through any of the channels below.
       </p>
 
@@ -165,7 +165,7 @@ export default function Contact() {
   return (
     <RootLayout>
       <PageIntro eyebrow="Contact us" title="Partner with StellarSafe">
-        <p>Ready to make your Stellar application safer? Let's build something amazing together.</p>
+        <p>Ready to make your Stellar application safer? Let&apos;s build something amazing together.</p>
       </PageIntro>
 
       <Container className="mt-24 sm:mt-32 lg:mt-40">
