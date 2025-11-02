@@ -57,7 +57,7 @@ function ContactForm() {
     <FadeIn className="lg:order-last">
       <form>
         <h2 className="font-display text-base font-semibold text-neutral-950">
-          Work inquiries
+          Partnership inquiries
         </h2>
         <div className="isolate mt-6 -space-y-px rounded-2xl bg-white/50">
           <TextInput label="Name" name="name" autoComplete="name" />
@@ -76,12 +76,12 @@ function ContactForm() {
           <TextInput label="Message" name="message" />
           <div className="border border-neutral-300 px-6 py-8 first:rounded-t-2xl last:rounded-b-2xl">
             <fieldset>
-              <legend className="text-base/6 text-neutral-500">Budget</legend>
+              <legend className="text-base/6 text-neutral-500">Integration Type</legend>
               <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2">
-                <RadioInput label="$25K – $50K" name="budget" value="25" />
-                <RadioInput label="$50K – $100K" name="budget" value="50" />
-                <RadioInput label="$100K – $150K" name="budget" value="100" />
-                <RadioInput label="More than $150K" name="budget" value="150" />
+                <RadioInput label="Free API (1K requests/month)" name="budget" value="free" />
+                <RadioInput label="Pro API ($49/month)" name="budget" value="pro" />
+                <RadioInput label="Enterprise API (Custom)" name="budget" value="enterprise" />
+                <RadioInput label="White-label Solution" name="budget" value="whitelabel" />
               </div>
             </fieldset>
           </div>
@@ -98,14 +98,27 @@ function ContactDetails() {
   return (
     <FadeIn>
       <h2 className="font-display text-base font-semibold text-neutral-950">
-        Our offices
+        Our team
       </h2>
       <p className="mt-6 text-base text-neutral-600">
-        Prefer doing things in person? We don’t but we have to list our
-        addresses here for legal reasons.
+        We're a distributed team working remotely to make Stellar safer for everyone. 
+        Reach out to us through any of the channels below.
       </p>
 
-      <Offices className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2" />
+      <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2">
+        <div className="bg-neutral-50 rounded-lg p-6">
+          <h3 className="font-semibold text-neutral-950 mb-2">🛡️ Security Team</h3>
+          <p className="text-sm text-neutral-600">
+            Threat analysis, risk assessment, and security research
+          </p>
+        </div>
+        <div className="bg-neutral-50 rounded-lg p-6">
+          <h3 className="font-semibold text-neutral-950 mb-2">🔧 Engineering</h3>
+          <p className="text-sm text-neutral-600">
+            API development, blockchain integration, and platform scaling
+          </p>
+        </div>
+      </div>
 
       <Border className="mt-16 pt-16">
         <h2 className="font-display text-base font-semibold text-neutral-950">
@@ -113,8 +126,10 @@ function ContactDetails() {
         </h2>
         <dl className="mt-6 grid grid-cols-1 gap-8 text-sm sm:grid-cols-2">
           {[
-            ['Careers', 'careers@studioagency.com'],
-            ['Press', 'press@studioagency.com'],
+            ['Partnerships', 'partnerships@stellarsafe.io'],
+            ['Support', 'support@stellarsafe.io'],
+            ['Security', 'security@stellarsafe.io'],
+            ['Press', 'press@stellarsafe.io'],
           ].map(([label, email]) => (
             <div key={email}>
               <dt className="font-semibold text-neutral-950">{label}</dt>
@@ -143,14 +158,14 @@ function ContactDetails() {
 
 export const metadata: Metadata = {
   title: 'Contact Us',
-  description: 'Let’s work together. We can’t wait to hear from you.',
+  description: 'Partner with StellarSafe to integrate security into your Stellar application. Get in touch with our team.',
 }
 
 export default function Contact() {
   return (
     <RootLayout>
-      <PageIntro eyebrow="Contact us" title="Let’s work together">
-        <p>We can’t wait to hear from you.</p>
+      <PageIntro eyebrow="Contact us" title="Partner with StellarSafe">
+        <p>Ready to make your Stellar application safer? Let's build something amazing together.</p>
       </PageIntro>
 
       <Container className="mt-24 sm:mt-32 lg:mt-40">
