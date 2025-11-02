@@ -211,8 +211,10 @@ export class ContractCollector {
     try {
       // Get Rust version
       const { stdout: rustVersion } = await execAsync('rustc --version');
-      buildInfo.rustVersion = rustVersion.trim();
-      console.log(`✓ Rust version: ${buildInfo.rustVersion}`);
+      const fullVersion = rustVersion.trim();
+      // Extract just the version number (e.g., "rustc 1.87.0" from "rustc 1.87.0 (17067e9ac 2025-05-09)")
+      buildInfo.rustVersion = fullVersion.split(' ').slice(0, 2).join(' ');
+      console.log(`✓ Rust version: ${fullVersion}`);
     } catch {
       console.log('⚠ Could not detect Rust version');
     }
@@ -220,8 +222,11 @@ export class ContractCollector {
     try {
       // Get Soroban CLI version
       const { stdout: sorobanVersion } = await execAsync('soroban --version');
-      buildInfo.sorobanVersion = sorobanVersion.trim();
-      console.log(`  Soroban CLI: ${buildInfo.sorobanVersion}`);
+      const fullVersion = sorobanVersion.trim();
+      // Extract just the main version line (first line)
+      const firstLine = fullVersion.split('\n')[0];
+      buildInfo.sorobanVersion = firstLine.length > 90 ? firstLine.substring(0, 90) + '...' : firstLine;
+      console.log(`  Soroban CLI: ${fullVersion}`);
     } catch {
       console.log('⚠ Could not detect Soroban CLI version');
     }

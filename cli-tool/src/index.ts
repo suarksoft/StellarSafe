@@ -19,7 +19,7 @@ program
   .description('Verify a contract using a verification code')
   .argument('<code>', '6-character verification code from StellarSafe')
   .option('-d, --directory <path>', 'Contract directory path', process.cwd())
-  .option('-a, --api-url <url>', 'Custom API URL', 'https://stellarsafe.io')
+  .option('-a, --api-url <url>', 'Custom API URL', 'https://stellar-safe-liard.vercel.app')
   .action(async (code: string, options: { directory: string; apiUrl: string }) => {
     try {
       console.log(chalk.bold.cyan('\n🔒 StellarSafe Contract Verification\n'));
@@ -157,7 +157,7 @@ program
   .command('status')
   .description('Check the status of a verification request')
   .argument('<code>', '6-character verification code')
-  .option('-a, --api-url <url>', 'Custom API URL', 'https://stellarsafe.io')
+  .option('-a, --api-url <url>', 'Custom API URL', 'https://stellar-safe-liard.vercel.app')
   .action(async (code: string, options: { apiUrl: string }) => {
     try {
       console.log(chalk.bold.cyan('\n🔍 Checking Verification Status\n'));
@@ -200,7 +200,7 @@ program
     
     console.log(chalk.bold('📖 Quick Start:\n'));
     console.log('1. Deploy your contract to Stellar');
-    console.log('2. Visit https://stellarsafe.io/developer');
+    console.log('2. Visit https://stellar-safe-liard.vercel.app/developer');
     console.log('3. Enter your contract ID and generate a code');
     console.log('4. Run: stellarsafe verify YOUR_CODE\n');
     
@@ -221,7 +221,7 @@ program
     console.log(chalk.gray('  stellarsafe status X7K9M2\n'));
     
     console.log(chalk.bold('🌐 Resources:\n'));
-    console.log(chalk.gray('  Website:      https://stellarsafe.io'));
+    console.log(chalk.gray('  Website:      https://stellar-safe-liard.vercel.app'));
     console.log(chalk.gray('  Documentation: https://stellarsafe.io/docs'));
     console.log(chalk.gray('  GitHub:       https://github.com/stellarsafe/stellarsafe'));
     console.log(chalk.gray('  Support:      hello@stellarsafe.io\n'));

@@ -4,7 +4,7 @@ import { ContractInfo, VerificationResponse } from './types';
 export class ApiClient {
   private baseUrl: string;
 
-  constructor(baseUrl: string = 'https://stellarsafe.io') {
+  constructor(baseUrl: string = 'https://stellar-safe-liard.vercel.app') {
     this.baseUrl = baseUrl.replace(/\/$/, ''); // Remove trailing slash
   }
 
