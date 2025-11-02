@@ -8,7 +8,6 @@ import { useEnhancedPortfolio } from '@/hooks/useEnhancedPortfolio';
 import { WalletConnectModal } from '@/components/WalletConnectModal';
 import { SendAssetModal } from '@/components/wallet/SendAssetModal';
 import { ReceiveAssetModal } from '@/components/wallet/ReceiveAssetModal';
-import { SwapAssetModal } from '@/components/wallet/SwapAssetModal';
 import { useState } from 'react';
 
 const DefenseWallet = () => {
@@ -17,7 +16,6 @@ const DefenseWallet = () => {
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showReceiveModal, setShowReceiveModal] = useState(false);
-  const [showSwapModal, setShowSwapModal] = useState(false);
 
   // Debug logging
   React.useEffect(() => {
@@ -283,18 +281,18 @@ const DefenseWallet = () => {
             </button>
 
             <button
-              onClick={() => setShowSwapModal(true)}
-              className="bg-white border-2 border-neutral-200 hover:border-neutral-300 p-6 rounded-2xl transition-all shadow-sm hover:shadow-md group"
+              onClick={() => alert('Swap özelliği yakında gelecek! 🚀\n\nŞu anda bu özellik geliştirme aşamasındadır.')}
+              className="bg-white border-2 border-neutral-200 hover:border-yellow-300 p-6 rounded-2xl transition-all shadow-sm hover:shadow-md group opacity-75 hover:opacity-100"
             >
               <div className="flex flex-col items-center space-y-3">
-                <div className="w-14 h-14 bg-neutral-100 group-hover:bg-neutral-200 rounded-xl flex items-center justify-center transition-colors">
-                  <svg className="w-7 h-7 text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-14 h-14 bg-yellow-100 group-hover:bg-yellow-200 rounded-xl flex items-center justify-center transition-colors">
+                  <svg className="w-7 h-7 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
                   </svg>
                 </div>
                 <div className="text-center">
                   <span className="font-semibold text-neutral-950 block">Swap</span>
-                  <span className="text-xs text-neutral-500">Exchange Assets</span>
+                  <span className="text-xs text-neutral-500">Coming Soon</span>
                 </div>
               </div>
             </button>
@@ -476,12 +474,6 @@ const DefenseWallet = () => {
           <ReceiveAssetModal
             isOpen={showReceiveModal}
             onClose={() => setShowReceiveModal(false)}
-          />
-          <SwapAssetModal
-            isOpen={showSwapModal}
-            onClose={() => setShowSwapModal(false)}
-            assets={data.assets.balances}
-            onSuccess={refresh}
           />
         </>
       )}
