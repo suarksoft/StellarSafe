@@ -20,6 +20,7 @@ import { GridPattern } from '@/components/GridPattern'
 import { Logo, Logomark } from '@/components/Logo'
 import { Offices } from '@/components/Offices'
 import { SocialMedia } from '@/components/SocialMedia'
+import { WalletProvider } from '@/contexts/WalletContext'
 
 const RootLayoutContext = createContext<{
   logoHovered: boolean
@@ -143,15 +144,12 @@ function Navigation() {
   return (
     <nav className="mt-px font-display text-5xl font-medium tracking-tight text-white">
       <NavigationRow>
-        <NavigationItem href="/analyze">Analyze Asset</NavigationItem>
-        <NavigationItem href="/transaction">Analyze Transaction</NavigationItem>
+        <NavigationItem href="/partners">Partners</NavigationItem>
+        <NavigationItem href="/defense-wallet">Defense Wallet</NavigationItem>
       </NavigationRow>
       <NavigationRow>
-        <NavigationItem href="/dashboard">Dashboard</NavigationItem>
-        <NavigationItem href="/assets">Asset Explorer</NavigationItem>
-      </NavigationRow>
-      <NavigationRow>
-        <NavigationItem href="/about">About</NavigationItem>
+        <NavigationItem href="/developer"> Developer</NavigationItem>
+        <NavigationItem href="/community">Community</NavigationItem>
       </NavigationRow>
     </nav>
   )
@@ -291,8 +289,10 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   let [logoHovered, setLogoHovered] = useState(false)
 
   return (
-    <RootLayoutContext.Provider value={{ logoHovered, setLogoHovered }}>
-      <RootLayoutInner key={pathname}>{children}</RootLayoutInner>
-    </RootLayoutContext.Provider>
+    <WalletProvider>
+      <RootLayoutContext.Provider value={{ logoHovered, setLogoHovered }}>
+        <RootLayoutInner key={pathname}>{children}</RootLayoutInner>
+      </RootLayoutContext.Provider>
+    </WalletProvider>
   )
 }

@@ -1,0 +1,9 @@
+src/
+tsconfig.json
+.gitignore
+*.md
+!README.md
+test/
+*.log
+.DS_Store
+

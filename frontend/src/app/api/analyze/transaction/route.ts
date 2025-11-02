@@ -69,11 +69,12 @@ export async function POST(request: NextRequest) {
     // Parse operations
     const parsedOperations = TransactionParser.parseOperations(transaction);
 
-    // Analyze transaction
+    // Analyze transaction (with simulation)
     const analysis = await transactionAnalyzer.analyzeTransaction(
       transaction.source,
       transaction.fee,
-      parsedOperations
+      parsedOperations,
+      transaction
     );
 
     // Add transaction hash if available

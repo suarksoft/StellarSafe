@@ -182,6 +182,8 @@ export const metadata: Metadata = {
 export default async function Home() {
   return (
     <RootLayout>
+      {/* API Banner removed per request */}
+
       <Container className="mt-24 sm:mt-32 md:mt-56">
         <FadeIn className="max-w-3xl">
           <h1 className="font-display text-5xl font-medium tracking-tight text-balance text-neutral-950 sm:text-7xl">
@@ -227,7 +229,7 @@ export default async function Home() {
             <List className="mt-16 lg:mt-0 lg:w-1/2 lg:min-w-132 lg:pl-4">
               <ListItem title="Asset Risk Analysis">
                 Comprehensive analysis of asset flags, issuer reputation, and
-                community intelligence. Know what you're trusting before you trust it.
+                community intelligence. Know what you&apos;re trusting before you trust it.
               </ListItem>
               <ListItem title="Transaction Monitoring">
                 Real-time analysis of all operations in your transaction. We detect
@@ -235,10 +237,10 @@ export default async function Home() {
               </ListItem>
               <ListItem title="Community Intelligence">
                 Powered by community reports and verified scam databases. Learn from
-                others' experiences and protect the ecosystem.
+                others&apos; experiences and protect the ecosystem.
               </ListItem>
               <ListItem title="Educational Warnings">
-                Clear, non-technical explanations of every risk. We don't just warn
+                Clear, non-technical explanations of every risk. We don&apos;t just warn
                 you—we help you understand why something is dangerous.
               </ListItem>
             </List>

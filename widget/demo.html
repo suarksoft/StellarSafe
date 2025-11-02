@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StellarSafe Widget Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #1a202c;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        .demo-section {
+            margin-bottom: 30px;
+        }
+        
+        .demo-section h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .test-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .btn-safe {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+        
+        .btn-lobstr {
+            background: #1a73e8;
+            color: white;
+        }
+        
+        .btn-freighter {
+            background: #5b21b6;
+            color: white;
+        }
+        
+        .btn-xbull {
+            background: #0f172a;
+            color: white;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .address-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            margin-bottom: 15px;
+        }
+        
+        .custom-test {
+            text-align: center;
+        }
+        
+        .integration-code {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'SF Mono', 'Monaco', monospace;
+            font-size: 14px;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        
+        .code-comment {
+            color: #68d391;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ StellarSafe Widget</h1>
+        
+        <div class="demo-section">
+            <h3>Wallet Brand Tests</h3>
+            <div class="test-buttons">
+                <button class="btn-lobstr" onclick="testLobstr()">
+                    Test Lobstr Style
+                </button>
+                <button class="btn-freighter" onclick="testFreighter()">
+                    Test Freighter Style
+                </button>
+                <button class="btn-xbull" onclick="testXbull()">
+                    Test xBull Style
+                </button>
+                <button onclick="testDefault()" style="background: #4299e1; color: white;">
+                    Test Default Style
+                </button>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h3>Risk Level Tests</h3>
+            <div class="test-buttons">
+                <button class="btn-safe" onclick="testSafeAddress()">
+                    ✅ Test Safe Address
+                </button>
+                <button class="btn-warning" onclick="testWarningAddress()">
+                    ⚠️ Test Warning Address
+                </button>
+                <button class="btn-danger" onclick="testDangerAddress()">
+                    🚨 Test Danger Address
+                </button>
+                <button onclick="testError()" style="background: #718096; color: white;">
+                    ❌ Test Error State
+                </button>
+            </div>
+        </div>
+        
+        <div class="demo-section custom-test">
+            <h3>Custom Address Test</h3>
+            <input 
+                type="text" 
+                id="customAddress" 
+                class="address-input" 
+                placeholder="Enter Stellar address to test..."
+                value="GCKFBEIYTKP6JY4Q7IVDVDM2WRQBN6WCBROH5VG6YWRFWQ7SHPQNSKP5"
+            >
+            <button onclick="testCustomAddress()" style="background: #3182ce; color: white; width: 100%;">
+                🔍 Analyze Custom Address
+            </button>
+        </div>
+        
+        <div class="integration-code">
+<span class="code-comment">// How to integrate into your wallet:</span>
+&lt;script src="https://cdn.stellarsafe.io/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  <span class="code-comment">// Before sending transaction:</span>
+  StellarSafeWidget.check({
+    address: recipientAddress,
+    partnerId: 'lobstr', <span class="code-comment">// or 'freighter', 'xbull'</span>
+    onResult: (result) => {
+      if (result.riskLevel === 'DANGER') {
+        <span class="code-comment">// Block or warn user</span>
+        console.log('High risk detected!', result);
+      }
+    }
+  });
+&lt;/script&gt;
+        </div>
+    </div>
+
+    <!-- Load the widget -->
+    <script src="./dist/widget.js"></script>
+    
+    <script>
+        // Test functions
+        function testLobstr() {
+            StellarSafeWidget.check({
+                address: 'GCKFBEIYTKP6JY4Q7IVDVDM2WRQBN6WCBROH5VG6YWRFWQ7SHPQNSKP5',
+                partnerId: 'lobstr',
+                onResult: (result) => console.log('Lobstr result:', result)
+            });
+        }
+        
+        function testFreighter() {
+            StellarSafeWidget.check({
+                address: 'GDTBAOFSM4X5TQMYIGBANE6LFYA3NWLVQWKWPXQ4JXME4YQ4JXM',
+                partnerId: 'freighter',
+                onResult: (result) => console.log('Freighter result:', result)
+            });
+        }
+        
+        function testXbull() {
+            StellarSafeWidget.check({
+                address: 'GSCAM1234567890DANGERSCAMDONOTSEND',
+                partnerId: 'xbull',
+                onResult: (result) => console.log('xBull result:', result)
+            });
+        }
+        
+        function testDefault() {
+            StellarSafeWidget.check({
+                address: 'GCKFBEIYTKP6JY4Q7IVDVDM2WRQBN6WCBROH5VG6YWRFWQ7SHPQNSKP5',
+                onResult: (result) => console.log('Default result:', result)
+            });
+        }
+        
+        function testSafeAddress() {
+            StellarSafeWidget.check({
+                address: 'GCKFBEIYTKP6JY4Q7IVDVDM2WRQBN6WCBROH5VG6YWRFWQ7SHPQNSKP5',
+                partnerId: 'lobstr',
+                onResult: (result) => console.log('Safe address result:', result)
+            });
+        }
+        
+        function testWarningAddress() {
+            StellarSafeWidget.check({
+                address: 'GDTBAOFSM4X5TQMYIGBANE6LFYA3NWLVQWKWPXQ4JXME4YQ4JXM',
+                partnerId: 'freighter',
+                onResult: (result) => console.log('Warning address result:', result)
+            });
+        }
+        
+        function testDangerAddress() {
+            StellarSafeWidget.check({
+                address: 'GSCAM1234567890DANGERSCAMDONOTSEND',
+                partnerId: 'xbull',
+                onResult: (result) => console.log('Danger address result:', result)
+            });
+        }
+        
+        function testError() {
+            // Simulate API error by using invalid address
+            StellarSafeWidget.check({
+                address: '',
+                partnerId: 'lobstr',
+                onResult: (result) => console.log('Error test result:', result),
+                onError: (error) => console.log('Error occurred:', error)
+            });
+        }
+        
+        function testCustomAddress() {
+            const address = document.getElementById('customAddress').value;
+            if (!address.trim()) {
+                alert('Please enter a Stellar address');
+                return;
+            }
+            
+            StellarSafeWidget.check({
+                address: address,
+                partnerId: 'lobstr',
+                onResult: (result) => console.log('Custom address result:', result)
+            });
+        }
+        
+        // Listen for widget events
+        window.addEventListener('stellarsafe:proceed', () => {
+            console.log('✅ User chose to proceed with transaction');
+        });
+        
+        window.addEventListener('stellarsafe:proceedAnyway', () => {
+            console.log('⚠️ User chose to proceed anyway despite warnings');
+        });
+    </script>
+</body>
+</html>

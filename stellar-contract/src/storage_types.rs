@@ -4,11 +4,11 @@ use soroban_sdk::{contracttype, Address, String};
 #[derive(Clone, Copy)]
 #[contracttype]
 pub enum RiskLevel {
-    Safe = 0,
-    Low = 1,
-    Medium = 2,
-    High = 3,
-    Critical = 4,
+    Safe,
+    Low,
+    Medium,
+    High,
+    Critical,
 }
 
 // Asset information stored on-chain
@@ -120,7 +120,6 @@ pub enum DataKey {
     Whitelist(Address), // issuer_address
     Blacklist(Address), // address
     ReportCounter,
-    LastReportId,
 }
 
 // TTL constants

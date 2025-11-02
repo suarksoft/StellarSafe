@@ -33,14 +33,38 @@ export interface AssetAnalysis {
 }
 
 export interface TransactionAnalysis {
-  transactionXDR: string;
-  riskScore: number;
-  riskLevel: RiskLevel;
+  source: string;
+  fee: string;
+  operations: any[];
+  overallRisk: {
+    level: RiskLevel;
+    score: number;
+  };
   threats: Threat[];
   recommendations: string[];
   simulationResult?: {
     success: boolean;
-    error?: string;
+    balanceChanges: Array<{
+      asset: { code: string; issuer?: string };
+      before: string;
+      after: string;
+      change: string;
+      changeType: 'increase' | 'decrease';
+      percentage?: number;
+    }>;
+    feeEstimate: {
+      baseFee: string;
+      resourceFee: string;
+      totalFee: string;
+    };
+    warnings: string[];
+    errors: string[];
+  };
+  transactionHash?: string;
+  metadata: {
+    operationCount: number;
+    hasMultipleAssets: boolean;
+    hasDangerousOperations: boolean;
   };
   analyzedAt: string;
 }

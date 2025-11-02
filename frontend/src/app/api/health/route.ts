@@ -1,32 +1,34 @@
 import { NextResponse } from 'next/server';
-import { stellarClient } from '@/lib/stellar/client';
+import pool from '@/lib/database/postgres';
 
 export async function GET() {
   try {
-    // Test Stellar connection with a known Stellar account
-    const testAccount = 'GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7';
-    await stellarClient.loadAccount(testAccount);
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        stellar: {
-          connected: true,
-          network: stellarClient.network,
-        },
-        version: '0.1.0',
-      },
-    });
+    // Test database connection
+    const client = await pool.connect();
+    
+    try {
+      // Simple query to test connection
+      const result = await client.query('SELECT NOW() as current_time, version() as postgres_version');
+      const { current_time, postgres_version } = result.rows[0];
+      
+      return NextResponse.json({
+        status: 'OK',
+        database: 'Connected',
+        timestamp: current_time,
+        postgres_version: postgres_version.split(' ')[0], // Just version number
+        message: 'StellarSafe API is healthy'
+      });
+    } finally {
+      client.release();
+    }
   } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Service unhealthy',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 503 }
-    );
+    console.error('Health check failed:', error);
+    
+    return NextResponse.json({
+      status: 'ERROR',
+      database: 'Disconnected',
+      error: error instanceof Error ? error.message : 'Unknown error',
+      message: 'Database connection failed'
+    }, { status: 500 });
   }
 }

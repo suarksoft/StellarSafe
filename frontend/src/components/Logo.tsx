@@ -25,13 +25,22 @@ export function Logomark({
         href={`#${id}-path`}
         className={invert ? 'stroke-white' : 'stroke-neutral-950'}
         fill="none"
-        strokeWidth="1.5"
+        strokeWidth="2"
       />
       <defs>
-        <path
-          id={`${id}-path`}
-          d="M3.25 26v.75H7c1.305 0 2.384-.21 3.346-.627.96-.415 1.763-1.02 2.536-1.752.695-.657 1.39-1.443 2.152-2.306l.233-.263c.864-.975 1.843-2.068 3.071-3.266 1.209-1.18 2.881-1.786 4.621-1.786h5.791V5.25H25c-1.305 0-2.384.21-3.346.627-.96.415-1.763 1.02-2.536 1.751-.695.658-1.39 1.444-2.152 2.307l-.233.263c-.864.975-1.843 2.068-3.071 3.266-1.209 1.18-2.881 1.786-4.621 1.786H3.25V26Z"
-        />
+        <g id={`${id}-path`}>
+          <ellipse
+            cx="16"
+            cy="16"
+            rx="14"
+            ry="10"
+          />
+          <path
+            d="M16 6 L16 26 M12 8 L16 6 L20 8 M14 24 L16 26 L18 24"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
         <clipPath id={`${id}-clip`}>
           <use href={`#${id}-path`} />
         </clipPath>

@@ -1,0 +1,51 @@
+{
+  "name": "@devrunnel/stellarsafe-cli",
+  "version": "1.0.0",
+  "description": "CLI tool for verifying Soroban smart contracts on StellarSafe",
+  "main": "dist/index.js",
+  "bin": {
+    "stellarsafe": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "stellar",
+    "soroban",
+    "smart-contract",
+    "verification",
+    "blockchain",
+    "stellarsafe"
+  ],
+  "author": "StellarSafe",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.0.0",
+    "ora": "^5.4.1",
+    "node-fetch": "^2.6.12",
+    "simple-git": "^3.19.1",
+    "glob": "^10.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.0",
+    "@types/node-fetch": "^2.6.4",
+    "typescript": "^5.1.6"
+  },
+  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stellarsafe/stellarsafe"
+  },
+  "bugs": {
+    "url": "https://github.com/stellarsafe/stellarsafe/issues"
+  },
+  "homepage": "https://stellarsafe.io"
+}
+

@@ -50,7 +50,7 @@ pub fn register_asset(
         panic!("Asset already registered");
     }
 
-    let current_ledger = e.ledger().sequence();
+    let current_ledger = e.ledger().sequence() as u64;
     let asset = AssetInfo {
         asset_code: asset_code.clone(),
         issuer_address: issuer_address.clone(),
@@ -79,7 +79,7 @@ pub fn update_asset_risk(
     
     asset.risk_score = risk_score;
     asset.risk_level = risk_level;
-    asset.updated_at = e.ledger().sequence();
+    asset.updated_at = e.ledger().sequence() as u64;
 
     write_asset(e, asset);
 }
@@ -90,7 +90,7 @@ pub fn verify_asset(e: &Env, asset_code: String, issuer_address: Address) {
     
     asset.is_verified = true;
     asset.trust_score = 100; // Verified assets get max trust
-    asset.updated_at = e.ledger().sequence();
+    asset.updated_at = e.ledger().sequence() as u64;
 
     write_asset(e, asset);
 }
@@ -109,7 +109,7 @@ pub fn update_trust_score(
         .expect("Asset not found");
     
     asset.trust_score = trust_score;
-    asset.updated_at = e.ledger().sequence();
+    asset.updated_at = e.ledger().sequence() as u64;
 
     write_asset(e, asset);
 }

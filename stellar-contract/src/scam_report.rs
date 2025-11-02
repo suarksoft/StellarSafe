@@ -18,7 +18,7 @@ pub fn increment_report_counter(e: &Env) -> u64 {
     e.storage().instance().set(&key, &counter);
     e.storage()
         .instance()
-        .extend_ttl(&key, INSTANCE_LIFETIME_THRESHOLD, INSTANCE_BUMP_AMOUNT);
+        .extend_ttl(INSTANCE_LIFETIME_THRESHOLD, INSTANCE_BUMP_AMOUNT);
     counter
 }
 
@@ -60,7 +60,7 @@ pub fn submit_report(
     reporter_address.require_auth();
 
     let report_id = increment_report_counter(e);
-    let current_ledger = e.ledger().sequence();
+    let current_ledger = e.ledger().sequence() as u64;
 
     let report = ReportData {
         report_id,
@@ -96,7 +96,7 @@ pub fn verify_report(
         _ => panic!("Can only verify pending reports"),
     }
 
-    let current_ledger = e.ledger().sequence();
+    let current_ledger = e.ledger().sequence() as u64;
     
     if approved {
         report.status = ReportStatus::Verified;
@@ -122,7 +122,7 @@ pub fn mark_report_spam(e: &Env, report_id: u64, moderator: Address) {
 
     report.status = ReportStatus::Spam;
     report.verified_by = Some(moderator);
-    report.verified_at = Some(e.ledger().sequence());
+    report.verified_at = Some(e.ledger().sequence() as u64);
 
     write_report(e, report);
 }

@@ -7,11 +7,11 @@ pub fn has_blacklist_entry(e: &Env, address: Address) -> bool {
 }
 
 pub fn read_blacklist_entry(e: &Env, address: Address) -> Option<BlacklistEntry> {
-    let key = DataKey::Blacklist(address);
+    let key = DataKey::Blacklist(address.clone());
     if let Some(entry) = e.storage().persistent().get::<_, BlacklistEntry>(&key) {
         // Check if expired
         if let Some(expires_at) = entry.expires_at {
-            if expires_at < e.ledger().sequence() {
+            if expires_at < e.ledger().sequence() as u64 {
                 // Entry expired, remove it
                 e.storage().persistent().remove(&key);
                 return None;
@@ -56,8 +56,8 @@ pub fn add_to_blacklist(
         reason,
         evidence_url,
         severity,
-        added_at: e.ledger().sequence(),
-        expires_at,
+        added_at: e.ledger().sequence() as u64,
+        expires_at: expires_at.map(|t| t as u64),
     };
 
     write_blacklist_entry(e, entry);
@@ -75,5 +75,5 @@ pub fn remove_from_blacklist(e: &Env, address: Address, admin: Address) {
 }
 
 pub fn is_blacklisted(e: &Env, address: Address) -> bool {
-    has_blacklist_entry(e, address) && read_blacklist_entry(e, address).is_some()
+    has_blacklist_entry(e, address.clone()) && read_blacklist_entry(e, address).is_some()
 }

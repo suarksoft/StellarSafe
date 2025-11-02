@@ -1,0 +1,38 @@
+{
+  "name": "@stellarsafe/widget",
+  "version": "1.0.0",
+  "description": "Zero-config security widget for Stellar wallets",
+  "main": "dist/widget.js",
+  "types": "dist/types.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack serve --mode development",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "stellar",
+    "security",
+    "wallet",
+    "widget",
+    "white-label"
+  ],
+  "author": "StellarSafe Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "css-loader": "^6.8.1",
+    "html-webpack-plugin": "^5.5.3",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.2.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "stellar-sdk": "^11.0.0"
+  }
+}

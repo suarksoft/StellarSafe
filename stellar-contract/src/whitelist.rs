@@ -45,7 +45,7 @@ pub fn add_to_whitelist(
         name,
         description,
         verified_by: verifier,
-        added_at: e.ledger().sequence(),
+        added_at: e.ledger().sequence() as u64,
     };
 
     write_whitelist_entry(e, entry);

@@ -2,6 +2,7 @@ import { ParsedOperation, OperationType, TransactionAnalysis } from './types';
 import { RiskLevel, Threat } from '../analyzer/types';
 import { calculateRiskScore, getRiskLevel, generateRecommendations } from '../analyzer/risk-scorer';
 import { AssetAnalyzer } from '../analyzer/asset-analyzer';
+import { simulationEngine, SimulationResult } from '../analyzer/simulation-engine';
 
 /**
  * Transaction risk analyzer
@@ -153,7 +154,8 @@ export class TransactionAnalyzer {
   async analyzeTransaction(
     sourceAccount: string,
     fee: string,
-    operations: Partial<ParsedOperation>[]
+    operations: Partial<ParsedOperation>[],
+    transaction?: any
   ): Promise<TransactionAnalysis> {
     // Analyze each operation
     const analyzedOperations = await Promise.all(
@@ -181,6 +183,45 @@ export class TransactionAnalyzer {
     // Generate recommendations
     const recommendations = generateRecommendations(uniqueThreats);
 
+    // Run simulation if transaction object provided
+    let simulationResult: SimulationResult | undefined;
+    if (transaction) {
+      try {
+        simulationResult = await simulationEngine.simulateTransaction(transaction, sourceAccount);
+        
+        // Add simulation-based threats
+        if (!simulationResult.success) {
+          uniqueThreats.push({
+            type: 'SIMULATION_FAILED',
+            severity: 'HIGH',
+            description: 'Transaction simulation failed',
+            technical: simulationResult.errors.join(', '),
+            explanation: 'This transaction may fail when submitted to the network. Review the errors and try again.',
+          });
+        }
+
+        // Add warnings as low-severity threats
+        for (const warning of simulationResult.warnings) {
+          uniqueThreats.push({
+            type: 'SIMULATION_WARNING',
+            severity: 'LOW',
+            description: warning,
+            technical: 'Detected during transaction simulation',
+            explanation: 'This is a warning based on transaction simulation. Review carefully.',
+          });
+        }
+      } catch (error) {
+        console.warn('Simulation failed:', error);
+      }
+    }
+
+    // Recalculate risk with simulation threats
+    const finalScore = calculateRiskScore(uniqueThreats);
+    const finalRisk = {
+      level: getRiskLevel(finalScore),
+      score: finalScore,
+    };
+
     // Check for dangerous patterns
     const hasDangerousOperations = analyzedOperations.some(
       (op) => op.type === OperationType.ACCOUNT_MERGE || op.type === OperationType.CLAWBACK
@@ -196,9 +237,10 @@ export class TransactionAnalyzer {
       source: sourceAccount,
       fee,
       operations: analyzedOperations,
-      overallRisk,
+      overallRisk: finalRisk,
       threats: uniqueThreats,
       recommendations,
+      simulationResult,
       metadata: {
         operationCount: operations.length,
         hasMultipleAssets: uniqueAssets.size > 1,

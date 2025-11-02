@@ -22,7 +22,16 @@ export class StellarClient {
     try {
       const account = await this.server.loadAccount(accountId);
       return account;
-    } catch (error) {
+    } catch (error: any) {
+      // Hesap bulunamadıysa özel bir hata fırlat
+      if (error?.response?.status === 404) {
+        const notFoundError = new Error(`Account not found: ${accountId}`);
+        (notFoundError as any).isNotFound = true;
+        (notFoundError as any).accountId = accountId;
+        (notFoundError as any).network = this.network;
+        throw notFoundError;
+      }
+      
       if (error instanceof Error) {
         throw new Error(`Failed to load account ${accountId}: ${error.message}`);
       }
@@ -177,6 +186,260 @@ export class StellarClient {
       if (error instanceof Error) {
         throw new Error(`Failed to get transaction: ${error.message}`);
       }
+      throw error;
+    }
+  }
+
+  /**
+   * Get account balances
+   */
+  async getAccountBalances(accountId: string) {
+    try {
+      const account = await this.loadAccount(accountId);
+      return account.balances.map((balance: any) => ({
+        asset: balance.asset_type === 'native' 
+          ? { code: 'XLM' }
+          : { code: balance.asset_code, issuer: balance.asset_issuer },
+        balance: balance.balance,
+        limit: balance.limit || null,
+        buyingLiabilities: balance.buying_liabilities || '0',
+        sellingLiabilities: balance.selling_liabilities || '0',
+      }));
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to get balances: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Check if account has trustline for asset
+   */
+  async hasTrustline(accountId: string, assetCode: string, issuerAddress: string) {
+    try {
+      const balances = await this.getAccountBalances(accountId);
+      return balances.some(balance => 
+        balance.asset.code === assetCode && 
+        balance.asset.issuer === issuerAddress
+      );
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Get asset holders count
+   */
+  async getAssetHoldersCount(assetCode: string, issuerAddress: string) {
+    try {
+      const asset = await this.getAssetInfo(assetCode, issuerAddress);
+      return parseInt((asset as any).num_accounts || (asset as any).accounts?.authorized || '0');
+    } catch (error) {
+      return 0;
+    }
+  }
+
+  /**
+   * Get account offers (open orders)
+   */
+  async getAccountOffers(accountId: string, limit: number = 100) {
+    try {
+      const offers = await this.server
+        .offers()
+        .forAccount(accountId)
+        .limit(limit)
+        .call();
+
+      return offers.records;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to get offers: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Get account effects (detailed history)
+   */
+  async getAccountEffects(accountId: string, limit: number = 100) {
+    try {
+      const effects = await this.server
+        .effects()
+        .forAccount(accountId)
+        .limit(limit)
+        .order('desc')
+        .call();
+
+      return effects.records;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to get effects: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Get account data entries (custom data)
+   */
+  async getAccountData(accountId: string) {
+    try {
+      const account = await this.loadAccount(accountId);
+      return account.data_attr || {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  /**
+   * Get account signers (multi-sig info)
+   */
+  async getAccountSigners(accountId: string) {
+    try {
+      const account = await this.loadAccount(accountId);
+      return account.signers || [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  /**
+   * Get account thresholds
+   */
+  async getAccountThresholds(accountId: string) {
+    try {
+      const account = await this.loadAccount(accountId);
+      return {
+        low_threshold: account.thresholds.low_threshold,
+        med_threshold: account.thresholds.med_threshold,
+        high_threshold: account.thresholds.high_threshold,
+      };
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /**
+   * Get account flags
+   */
+  async getAccountFlags(accountId: string) {
+    try {
+      const account = await this.loadAccount(accountId);
+      return {
+        auth_required: account.flags.auth_required,
+        auth_revocable: account.flags.auth_revocable,
+        auth_immutable: account.flags.auth_immutable,
+        auth_clawback_enabled: account.flags.auth_clawback_enabled || false,
+      };
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /**
+   * Get recent trades for account
+   */
+  async getAccountTrades(accountId: string, limit: number = 50) {
+    try {
+      const trades = await this.server
+        .trades()
+        .forAccount(accountId)
+        .limit(limit)
+        .order('desc')
+        .call();
+
+      return trades.records;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to get trades: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Get account sequence number
+   */
+  async getAccountSequence(accountId: string): Promise<string> {
+    try {
+      const account = await this.loadAccount(accountId);
+      return account.sequence;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Get account sponsor info
+   */
+  async getAccountSponsor(accountId: string) {
+    try {
+      const account = await this.loadAccount(accountId);
+      return {
+        sponsor: (account as any).sponsor || null,
+        num_sponsored: (account as any).num_sponsored || 0,
+        num_sponsoring: (account as any).num_sponsoring || 0,
+      };
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /**
+   * Get comprehensive account stats
+   */
+  async getAccountStats(accountId: string) {
+    try {
+      const [
+        account,
+        transactions,
+        operations,
+        payments,
+        offers,
+        effects,
+        signers,
+        thresholds,
+        flags,
+        sponsor
+      ] = await Promise.all([
+        this.loadAccount(accountId),
+        this.getTransactions(accountId, 100).catch(() => []),
+        this.getOperations(accountId, 100).catch(() => []),
+        this.getPaymentHistory(accountId, 100).catch(() => []),
+        this.getAccountOffers(accountId).catch(() => []),
+        this.getAccountEffects(accountId, 100).catch(() => []),
+        this.getAccountSigners(accountId).catch(() => []),
+        this.getAccountThresholds(accountId).catch(() => null),
+        this.getAccountFlags(accountId).catch(() => null),
+        this.getAccountSponsor(accountId).catch(() => null),
+      ]);
+
+      return {
+        account,
+        stats: {
+          totalTransactions: transactions.length,
+          totalOperations: operations.length,
+          totalPayments: payments.length,
+          activeOffers: offers.length,
+          totalEffects: effects.length,
+          signersCount: signers.length,
+          hasMultiSig: signers.length > 1,
+        },
+        security: {
+          thresholds,
+          flags,
+          signers,
+          sponsor,
+        },
+        activity: {
+          recentTransactions: transactions.slice(0, 10),
+          recentPayments: payments.slice(0, 10),
+          recentEffects: effects.slice(0, 20),
+        }
+      };
+    } catch (error) {
       throw error;
     }
   }

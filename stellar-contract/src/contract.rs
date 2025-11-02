@@ -5,7 +5,7 @@ use crate::asset_registry::{
 use crate::blacklist::{add_to_blacklist, is_blacklisted, read_blacklist_entry, remove_from_blacklist};
 use crate::scam_report::{mark_report_spam, read_report, submit_report, verify_report};
 use crate::storage_types::{
-    AssetInfo, BlacklistEntry, ReportData, ReportStatus, ReportType, RiskLevel, Severity,
+    AssetInfo, BlacklistEntry, ReportData, ReportType, RiskLevel, Severity,
     WhitelistEntry, INSTANCE_BUMP_AMOUNT, INSTANCE_LIFETIME_THRESHOLD,
 };
 use crate::whitelist::{add_to_whitelist, is_whitelisted, read_whitelist_entry, remove_from_whitelist};
@@ -131,12 +131,13 @@ impl StellarSafeRegistry {
         report_type: ReportType,
         description: String,
         evidence_url: Option<String>,
+        reporter: Address,
     ) -> u64 {
+        reporter.require_auth();
         e.storage()
             .instance()
             .extend_ttl(INSTANCE_LIFETIME_THRESHOLD, INSTANCE_BUMP_AMOUNT);
 
-        let reporter = e.invoker();
         submit_report(
             &e,
             issuer_address,

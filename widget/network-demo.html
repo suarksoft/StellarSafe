@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StellarSafe Widget - Network Demo</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f8fafc;
+    }
+    
+    .demo-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 20px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 20px;
+    }
+    
+    .network-card {
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+    
+    .network-card.testnet {
+      border-color: #fbbf24;
+      background: #fffbeb;
+    }
+    
+    .network-card.mainnet {
+      border-color: #10b981;
+      background: #f0fdf4;
+    }
+    
+    .network-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .network-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    
+    .badge-testnet {
+      background: #fbbf24;
+      color: #92400e;
+    }
+    
+    .badge-mainnet {
+      background: #10b981;
+      color: #064e3b;
+    }
+    
+    .test-addresses {
+      margin-top: 16px;
+    }
+    
+    .address-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0;
+      padding: 8px;
+      background: rgba(0,0,0,0.02);
+      border-radius: 6px;
+    }
+    
+    .address-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 12px;
+    }
+    
+    .test-btn {
+      padding: 8px 16px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .test-btn:hover {
+      background: #2563eb;
+    }
+    
+    .risk-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    
+    .risk-safe { background: #10b981; }
+    .risk-warning { background: #f59e0b; }
+    .risk-danger { background: #ef4444; }
+    
+    .partner-selector {
+      margin: 16px 0;
+    }
+    
+    .partner-selector select {
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: white;
+    }
+    
+    .init-status {
+      padding: 12px;
+      margin: 16px 0;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    
+    .status-ready {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛡️ StellarSafe Widget - Network Demo</h1>
+  <p>Test the widget on both Stellar Testnet and Mainnet with different wallet partnerships.</p>
+
+  <div class="demo-section">
+    <h2>Network Configuration</h2>
+    <p>Initialize the widget for different Stellar networks:</p>
+    
+    <div class="demo-grid">
+      <!-- Testnet Configuration -->
+      <div class="network-card testnet">
+        <div class="network-badge badge-testnet">Testnet</div>
+        <h3>Development & Testing</h3>
+        <p>Perfect for development, CI/CD, and user testing. Uses demo data and mock responses.</p>
+        
+        <div class="partner-selector">
+          <label>Partner Brand:</label>
+          <select id="testnet-partner">
+            <option value="lobstr">Lobstr</option>
+            <option value="freighter">Freighter</option>
+            <option value="xbull">xBull</option>
+            <option value="default">Default</option>
+          </select>
+        </div>
+        
+        <button class="test-btn" onclick="initTestnet()" style="width: 100%; padding: 12px; margin: 8px 0;">
+          🔧 Initialize Testnet Widget
+        </button>
+        
+        <div class="test-addresses">
+          <h4>Test Addresses:</h4>
+          <div class="address-row">
+            <div class="risk-indicator risk-safe"></div>
+            <input class="address-input" value="GCKFBEIYTKP6JY4Q7IVDVDM2WRQBN6WCBROH5VG6YWRFWQ7SHPQNSKP5" readonly>
+            <button class="test-btn" onclick="testAddress(this.previousElementSibling.value)">Test</button>
+          </div>
+          <div class="address-row">
+            <div class="risk-indicator risk-warning"></div>
+            <input class="address-input" value="GDTBAOFSMU7YUJLWNZ4JHF7UAVP6YIKINWQARZP54GQXQ4JXM2RANDOM" readonly>
+            <button class="test-btn" onclick="testAddress(this.previousElementSibling.value)">Test</button>
+          </div>
+          <div class="address-row">
+            <div class="risk-indicator risk-danger"></div>
+            <input class="address-input" value="GSCAM1234567890ABCDEF1234567890ABCDEF1234567890DANGER" readonly>
+            <button class="test-btn" onclick="testAddress(this.previousElementSibling.value)">Test</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mainnet Configuration -->
+      <div class="network-card mainnet">
+        <div class="network-badge badge-mainnet">Mainnet</div>
+        <h3>Production Ready</h3>
+        <p>Live production network with real user funds. Requires authentication and uses real risk analysis.</p>
+        
+        <div class="partner-selector">
+          <label>Partner Brand:</label>
+          <select id="mainnet-partner">
+            <option value="lobstr">Lobstr</option>
+            <option value="freighter">Freighter</option>
+            <option value="xbull">xBull</option>
+            <option value="default">Default</option>
+          </select>
+        </div>
+        
+        <button class="test-btn" onclick="initMainnet()" style="width: 100%; padding: 12px; margin: 8px 0;">
+          🚀 Initialize Mainnet Widget
+        </button>
+        
+        <div class="test-addresses">
+          <h4>Real Mainnet Addresses:</h4>
+          <div class="address-row">
+            <div class="risk-indicator risk-safe"></div>
+            <input class="address-input" value="GCKFBEIYTKP6JY4Q7IVDVDM2WRQBN6WCBROH5VG6YWRFWQ7SHPQNSKP5" readonly>
+            <button class="test-btn" onclick="testAddress(this.previousElementSibling.value)">Test</button>
+          </div>
+          <div class="address-row">
+            <div class="risk-indicator risk-safe"></div>
+            <input class="address-input" value="GAHK7EEG2WWHVKDNT4CEQFZGKF2LGDSW2IVM4S5DP42RBW3K6BTODB4A" readonly>
+            <button class="test-btn" onclick="testAddress(this.previousElementSibling.value)">Test</button>
+          </div>
+          <div class="address-row">
+            <div class="risk-indicator risk-warning"></div>
+            <input class="address-input" placeholder="Enter any Mainnet address..." id="custom-address">
+            <button class="test-btn" onclick="testAddress(document.getElementById('custom-address').value)">Test</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="init-status" class="init-status status-pending">
+      ⏳ Please initialize a widget configuration above
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <h2>Integration Examples</h2>
+    <p>See how different wallets would integrate StellarSafe:</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+      <div style="background: #f8fafc; padding: 16px; border-radius: 8px;">
+        <h4>📱 Lobstr Mobile</h4>
+        <pre style="font-size: 11px; background: #1a1a1a; color: #fff; padding: 12px; border-radius: 4px; overflow-x: auto;"><code>// In Lobstr app
+StellarSafeWidget.init({
+  partnerId: 'lobstr',
+  network: 'mainnet',
+  authToken: 'sk_lobstr_prod_abc123'
+});
+
+// Before transaction
+StellarSafeWidget.check({
+  address: recipientAddress,
+  onResult: (result) => {
+    if (result.riskLevel === 'DANGER') {
+      showLobstrWarning(result);
+    } else {
+      proceedWithSend();
+    }
+  }
+});</code></pre>
+      </div>
+      
+      <div style="background: #f8fafc; padding: 16px; border-radius: 8px;">
+        <h4>🔧 Freighter Extension</h4>
+        <pre style="font-size: 11px; background: #1a1a1a; color: #fff; padding: 12px; border-radius: 4px; overflow-x: auto;"><code>// In Freighter extension
+StellarSafeWidget.init({
+  partnerId: 'freighter',
+  network: 'mainnet',
+  failMode: 'closed'  // Block on high risk
+});
+
+// Check before signing
+await StellarSafeWidget.check({
+  address: transaction.destination
+});</code></pre>
+      </div>
+      
+      <div style="background: #f8fafc; padding: 16px; border-radius: 8px;">
+        <h4>🌐 xBull Wallet</h4>
+        <pre style="font-size: 11px; background: #1a1a1a; color: #fff; padding: 12px; border-radius: 4px; overflow-x: auto;"><code>// In xBull wallet
+StellarSafeWidget.init({
+  partnerId: 'xbull',
+  network: 'testnet',  // For staging
+  customConfig: {
+    colors: {
+      primary: '#0F172A'
+    }
+  }
+});</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load the widget -->
+  <script src="dist/stellarsafe-widget.js"></script>
+  
+  <script>
+    let currentNetwork = null;
+    
+    function updateStatus(message, isReady = false) {
+      const status = document.getElementById('init-status');
+      status.textContent = message;
+      status.className = `init-status ${isReady ? 'status-ready' : 'status-pending'}`;
+    }
+    
+    function initTestnet() {
+      const partnerId = document.getElementById('testnet-partner').value;
+      
+      window.StellarSafeWidget.init({
+        partnerId: partnerId,
+        network: 'testnet',
+        failMode: 'open'
+      });
+      
+      currentNetwork = 'testnet';
+      updateStatus(`✅ Testnet widget initialized with ${partnerId} branding`, true);
+    }
+    
+    function initMainnet() {
+      const partnerId = document.getElementById('mainnet-partner').value;
+      
+      window.StellarSafeWidget.init({
+        partnerId: partnerId,
+        network: 'mainnet',
+        // Note: In production, authToken would be required
+        // authToken: 'sk_live_your_token_here',
+        failMode: 'closed'
+      });
+      
+      currentNetwork = 'mainnet';
+      updateStatus(`✅ Mainnet widget initialized with ${partnerId} branding (demo mode)`, true);
+    }
+    
+    function testAddress(address) {
+      if (!address || !address.trim()) {
+        alert('Please enter an address to test');
+        return;
+      }
+      
+      if (!currentNetwork) {
+        alert('Please initialize a network configuration first');
+        return;
+      }
+      
+      console.log(`Testing address on ${currentNetwork}:`, address);
+      
+      window.StellarSafeWidget.check({
+        address: address.trim(),
+        onResult: (result) => {
+          console.log('Analysis result:', result);
+        },
+        onError: (error) => {
+          console.error('Analysis error:', error);
+        }
+      });
+    }
+    
+    // Listen for widget events
+    window.addEventListener('stellarsafe:proceed', () => {
+      console.log('✅ User chose to proceed with transaction');
+      alert('Transaction would proceed normally');
+    });
+    
+    window.addEventListener('stellarsafe:proceedAnyway', () => {
+      console.log('⚠️ User chose to proceed despite warnings');  
+      alert('Transaction would proceed with user acknowledgment of risks');
+    });
+  </script>
+</body>
+</html>

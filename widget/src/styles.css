@@ -1,0 +1,278 @@
+/* StellarSafe Widget Styles */
+
+.stellarsafe-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stellarsafe-modal {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 400px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transform: scale(0.9) translateY(20px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.stellarsafe-modal.stellarsafe-animate-in {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.stellarsafe-modal.stellarsafe-top {
+  align-self: flex-start;
+  margin-top: 20px;
+}
+
+.stellarsafe-modal.stellarsafe-bottom {
+  align-self: flex-end;
+  margin-bottom: 20px;
+}
+
+.stellarsafe-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.stellarsafe-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+.stellarsafe-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  flex: 1;
+}
+
+.stellarsafe-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #64748b;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.stellarsafe-close:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.stellarsafe-content {
+  padding: 24px;
+}
+
+.stellarsafe-spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 16px;
+  border: 3px solid #f1f5f9;
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: stellarsafe-spin 1s linear infinite;
+}
+
+@keyframes stellarsafe-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.stellarsafe-status-icon {
+  text-align: center;
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.stellarsafe-message {
+  margin: 0 0 20px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #475569;
+  text-align: center;
+}
+
+.stellarsafe-main-message {
+  font-weight: 500;
+  font-size: 18px;
+  color: #1e293b;
+}
+
+.stellarsafe-details {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.stellarsafe-score {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.stellarsafe-label {
+  color: #64748b;
+}
+
+.stellarsafe-value {
+  color: #1e293b;
+  font-size: 18px;
+}
+
+.stellarsafe-factor {
+  font-size: 14px;
+  color: #059669;
+  margin-bottom: 8px;
+}
+
+.stellarsafe-factor:last-child {
+  margin-bottom: 0;
+}
+
+.stellarsafe-actions {
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+}
+
+.stellarsafe-btn {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.stellarsafe-btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.stellarsafe-btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.stellarsafe-btn-success {
+  background: var(--success-color);
+  color: white;
+}
+
+.stellarsafe-btn-success:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.stellarsafe-btn-warning {
+  background: var(--warning-color);
+  color: white;
+}
+
+.stellarsafe-btn-warning:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.stellarsafe-btn-danger {
+  background: var(--danger-color);
+  color: white;
+}
+
+.stellarsafe-btn-danger:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.stellarsafe-btn-outline {
+  background: transparent;
+  color: #64748b;
+  border-color: #e2e8f0;
+}
+
+.stellarsafe-btn-outline:hover {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+/* Status-specific styles */
+.stellarsafe-status-safe .stellarsafe-status-icon {
+  color: var(--success-color);
+}
+
+.stellarsafe-status-warning .stellarsafe-status-icon {
+  color: var(--warning-color);
+}
+
+.stellarsafe-status-danger .stellarsafe-status-icon {
+  color: var(--danger-color);
+}
+
+.stellarsafe-error {
+  text-align: center;
+}
+
+.stellarsafe-error-details {
+  font-size: 14px;
+  color: #64748b;
+  background: #fef2f2;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 16px 0;
+  border-left: 4px solid var(--danger-color);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .stellarsafe-modal {
+    width: 95%;
+    margin: 10px;
+  }
+  
+  .stellarsafe-header {
+    padding: 16px 20px 12px;
+  }
+  
+  .stellarsafe-content {
+    padding: 20px;
+  }
+  
+  .stellarsafe-actions {
+    flex-direction: column;
+  }
+}
