@@ -1,8 +1,40 @@
-import { supabase, VerifiedAsset, BlacklistedAsset, AnalysisHistory } from './supabase';
+import { executeQuery } from './postgres';
+
+// Database types
+interface VerifiedAsset {
+  id: string;
+  asset_code: string;
+  issuer_address: string;
+  home_domain?: string;
+  description?: string;
+  verification_status: 'pending' | 'verified' | 'rejected';
+  risk_level: 'SAFE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  risk_score: number;
+  verified_at?: string;
+  verified_by?: string;
+  toml_url?: string;
+  logo_url?: string;
+  website?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface BlacklistedAsset {
+  id: string;
+  asset_code: string;
+  issuer_address: string;
+  reason: string;
+  risk_level: 'SAFE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  risk_score: number;
+  blacklisted_at: string;
+  reported_by: string;
+  created_at: string;
+  updated_at: string;
+}
 
 /**
  * Asset Database Service
- * Handles verified and blacklisted asset operations
+ * Handles verified and blacklisted asset operations using PostgreSQL
  */
 export class AssetDatabaseService {
   /**
@@ -10,17 +42,13 @@ export class AssetDatabaseService {
    */
   async isVerified(assetCode: string, issuerAddress: string): Promise<boolean> {
     try {
-      const { data, error } = await supabase
-        .from('verified_assets')
-        .select('id')
-        .eq('asset_code', assetCode)
-        .eq('issuer_address', issuerAddress)
-        .eq('verification_status', 'verified')
-        .single();
-
-      if (error) return false;
-      return !!data;
-    } catch {
+      const result = await executeQuery(
+        'SELECT id FROM verified_assets WHERE asset_code = $1 AND issuer_address = $2 AND verification_status = $3',
+        [assetCode, issuerAddress, 'verified']
+      );
+      return result.rows.length > 0;
+    } catch (error) {
+      console.error('Error checking asset verification:', error);
       return false;
     }
   }
@@ -30,35 +58,13 @@ export class AssetDatabaseService {
    */
   async isBlacklisted(assetCode: string, issuerAddress: string): Promise<BlacklistedAsset | null> {
     try {
-      const { data, error } = await supabase
-        .from('blacklisted_assets')
-        .select('*')
-        .eq('asset_code', assetCode)
-        .eq('issuer_address', issuerAddress)
-        .single();
-
-      if (error) return null;
-      return data;
-    } catch {
-      return null;
-    }
-  }
-
-  /**
-   * Get verified asset details
-   */
-  async getVerifiedAsset(assetCode: string, issuerAddress: string): Promise<VerifiedAsset | null> {
-    try {
-      const { data, error } = await supabase
-        .from('verified_assets')
-        .select('*')
-        .eq('asset_code', assetCode)
-        .eq('issuer_address', issuerAddress)
-        .single();
-
-      if (error) return null;
-      return data;
-    } catch {
+      const result = await executeQuery(
+        'SELECT * FROM blacklisted_assets WHERE asset_code = $1 AND issuer_address = $2',
+        [assetCode, issuerAddress]
+      );
+      return result.rows.length > 0 ? result.rows[0] : null;
+    } catch (error) {
+      console.error('Error checking asset blacklist:', error);
       return null;
     }
   }
@@ -66,19 +72,15 @@ export class AssetDatabaseService {
   /**
    * Get all verified assets
    */
-  async getAllVerifiedAssets(limit: number = 100): Promise<VerifiedAsset[]> {
+  async getAllVerifiedAssets(): Promise<VerifiedAsset[]> {
     try {
-      const { data, error } = await supabase
-        .from('verified_assets')
-        .select('*')
-        .eq('verification_status', 'verified')
-        .order('risk_score', { ascending: true })
-        .limit(limit);
-
-      if (error) throw error;
-      return data || [];
+      const result = await executeQuery(
+        'SELECT * FROM verified_assets WHERE verification_status = $1 ORDER BY verified_at DESC',
+        ['verified']
+      );
+      return result.rows;
     } catch (error) {
-      console.error('Failed to fetch verified assets:', error);
+      console.error('Error fetching verified assets:', error);
       return [];
     }
   }
@@ -88,17 +90,16 @@ export class AssetDatabaseService {
    */
   async searchVerifiedAssets(query: string): Promise<VerifiedAsset[]> {
     try {
-      const { data, error } = await supabase
-        .from('verified_assets')
-        .select('*')
-        .eq('verification_status', 'verified')
-        .or(`asset_code.ilike.%${query}%,home_domain.ilike.%${query}%,description.ilike.%${query}%`)
-        .limit(50);
-
-      if (error) throw error;
-      return data || [];
+      const result = await executeQuery(
+        `SELECT * FROM verified_assets 
+         WHERE verification_status = $1 
+         AND (asset_code ILIKE $2 OR description ILIKE $2 OR home_domain ILIKE $2)
+         ORDER BY verified_at DESC`,
+        ['verified', `%${query}%`]
+      );
+      return result.rows;
     } catch (error) {
-      console.error('Search failed:', error);
+      console.error('Error searching verified assets:', error);
       return [];
     }
   }
@@ -108,70 +109,92 @@ export class AssetDatabaseService {
    */
   async getAllBlacklistedAssets(): Promise<BlacklistedAsset[]> {
     try {
-      const { data, error } = await supabase
-        .from('blacklisted_assets')
-        .select('*')
-        .order('reported_at', { ascending: false });
-
-      if (error) throw error;
-      return data || [];
+      const result = await executeQuery(
+        'SELECT * FROM blacklisted_assets ORDER BY blacklisted_at DESC'
+      );
+      return result.rows;
     } catch (error) {
-      console.error('Failed to fetch blacklisted assets:', error);
+      console.error('Error fetching blacklisted assets:', error);
       return [];
     }
   }
 
   /**
-   * Save analysis to history
+   * Search blacklisted assets
    */
-  async saveAnalysisHistory(
-    analysisType: 'asset' | 'transaction',
-    analysisData: any
-  ): Promise<boolean> {
+  async searchBlacklistedAssets(query: string): Promise<BlacklistedAsset[]> {
     try {
-      const historyEntry: Partial<AnalysisHistory> = {
-        analysis_type: analysisType,
-        risk_level: analysisData.riskLevel || analysisData.overallRisk?.level,
-        risk_score: analysisData.riskScore || analysisData.overallRisk?.score,
-        threats_count: analysisData.threats?.length || 0,
-        analysis_data: analysisData,
-      };
+      const result = await executeQuery(
+        `SELECT * FROM blacklisted_assets 
+         WHERE asset_code ILIKE $1 OR reason ILIKE $1
+         ORDER BY blacklisted_at DESC`,
+        [`%${query}%`]
+      );
+      return result.rows;
+    } catch (error) {
+      console.error('Error searching blacklisted assets:', error);
+      return [];
+    }
+  }
 
-      if (analysisType === 'asset') {
-        historyEntry.asset_code = analysisData.assetCode;
-        historyEntry.issuer_address = analysisData.issuerAddress;
-      } else if (analysisType === 'transaction') {
-        historyEntry.transaction_hash = analysisData.transactionHash;
-      }
+  /**
+   * Get asset verification details
+   */
+  async getAssetDetails(assetCode: string, issuerAddress: string): Promise<VerifiedAsset | null> {
+    try {
+      const result = await executeQuery(
+        'SELECT * FROM verified_assets WHERE asset_code = $1 AND issuer_address = $2 AND verification_status = $3',
+        [assetCode, issuerAddress, 'verified']
+      );
+      return result.rows.length > 0 ? result.rows[0] : null;
+    } catch (error) {
+      console.error('Error fetching asset details:', error);
+      return null;
+    }
+  }
 
-      const { error } = await supabase
-        .from('analysis_history')
-        .insert(historyEntry);
-
-      if (error) throw error;
+  /**
+   * Add asset to verification queue
+   */
+  async requestVerification(assetCode: string, issuerAddress: string, metadata: any): Promise<boolean> {
+    try {
+      await executeQuery(
+        `INSERT INTO verified_assets (asset_code, issuer_address, home_domain, description, verification_status, risk_level, risk_score, toml_url, logo_url, website, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW(), NOW())`,
+        [
+          assetCode,
+          issuerAddress,
+          metadata.home_domain,
+          metadata.description,
+          'pending',
+          'MEDIUM',
+          50,
+          metadata.toml_url,
+          metadata.logo_url,
+          metadata.website
+        ]
+      );
       return true;
     } catch (error) {
-      console.error('Failed to save analysis history:', error);
+      console.error('Error requesting asset verification:', error);
       return false;
     }
   }
 
   /**
-   * Get recent analysis history
+   * Report asset as suspicious
    */
-  async getRecentAnalyses(limit: number = 20): Promise<AnalysisHistory[]> {
+  async reportAsset(assetCode: string, issuerAddress: string, reason: string, reportedBy: string): Promise<boolean> {
     try {
-      const { data, error } = await supabase
-        .from('analysis_history')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(limit);
-
-      if (error) throw error;
-      return data || [];
+      await executeQuery(
+        `INSERT INTO blacklisted_assets (asset_code, issuer_address, reason, risk_level, risk_score, blacklisted_at, reported_by, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, NOW(), $6, NOW(), NOW())`,
+        [assetCode, issuerAddress, reason, 'HIGH', 80, reportedBy]
+      );
+      return true;
     } catch (error) {
-      console.error('Failed to fetch analysis history:', error);
-      return [];
+      console.error('Error reporting asset:', error);
+      return false;
     }
   }
 
@@ -180,29 +203,41 @@ export class AssetDatabaseService {
    */
   async getAssetStats() {
     try {
-      const [verifiedCount, blacklistedCount] = await Promise.all([
-        supabase
-          .from('verified_assets')
-          .select('id', { count: 'exact', head: true })
-          .eq('verification_status', 'verified'),
-        supabase
-          .from('blacklisted_assets')
-          .select('id', { count: 'exact', head: true }),
+      const [verifiedResult, blacklistedResult, riskDistResult] = await Promise.all([
+        executeQuery('SELECT COUNT(*) as count FROM verified_assets WHERE verification_status = $1', ['verified']),
+        executeQuery('SELECT COUNT(*) as count FROM blacklisted_assets'),
+        executeQuery(`
+          SELECT risk_level, COUNT(*) as count 
+          FROM verified_assets 
+          WHERE verification_status = 'verified' 
+          GROUP BY risk_level
+        `)
       ]);
 
+      const riskDistribution = riskDistResult.rows.reduce((acc: any, row: any) => {
+        acc[row.risk_level] = parseInt(row.count);
+        return acc;
+      }, { SAFE: 0, LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0 });
+
       return {
-        verifiedCount: verifiedCount.count || 0,
-        blacklistedCount: blacklistedCount.count || 0,
+        totalVerified: parseInt(verifiedResult.rows[0].count),
+        totalBlacklisted: parseInt(blacklistedResult.rows[0].count),
+        recentlyVerified: 0, // Bu ayrı bir query ile hesaplanabilir
+        pendingVerification: 0, // Bu da ayrı bir query ile hesaplanabilir
+        riskDistribution
       };
     } catch (error) {
-      console.error('Failed to fetch asset stats:', error);
+      console.error('Error fetching asset stats:', error);
       return {
-        verifiedCount: 0,
-        blacklistedCount: 0,
+        totalVerified: 0,
+        totalBlacklisted: 0,
+        recentlyVerified: 0,
+        pendingVerification: 0,
+        riskDistribution: { SAFE: 0, LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0 }
       };
     }
   }
 }
 
-// Export singleton
+// Export singleton instance
 export const assetDatabase = new AssetDatabaseService();

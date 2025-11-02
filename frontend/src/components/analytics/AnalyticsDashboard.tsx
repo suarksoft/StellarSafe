@@ -15,16 +15,16 @@ export const AnalyticsDashboard: React.FC = () => {
   const [logs, setLogs] = useState<any[]>([]);
   const [showLogs, setShowLogs] = useState(false);
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
   const loadData = useCallback(() => {
     const statsData = getStats();
     const logsData = getLogs();
     setStats(statsData);
     setLogs(logsData);
   }, [getStats, getLogs]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handleClearLogs = () => {
     if (confirm('Tüm analiz log\'larını silmek istediğinize emin misiniz?')) {

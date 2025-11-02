@@ -6,8 +6,37 @@ import { PageIntro } from '@/components/PageIntro';
 import { Container } from '@/components/Container';
 import { FadeIn } from '@/components/FadeIn';
 import { RiskBadge } from '@/components/analysis/RiskBadge';
-import { assetDatabase } from '@/lib/database/asset-service';
-import { VerifiedAsset, BlacklistedAsset } from '@/lib/database/supabase';
+// Types for assets
+interface VerifiedAsset {
+  id: string;
+  asset_code: string;
+  issuer_address: string;
+  home_domain?: string;
+  description?: string;
+  verification_status: 'pending' | 'verified' | 'rejected';
+  risk_level: 'SAFE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  risk_score: number;
+  verified_at?: string;
+  verified_by?: string;
+  toml_url?: string;
+  logo_url?: string;
+  website?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface BlacklistedAsset {
+  id: string;
+  asset_code: string;
+  issuer_address: string;
+  reason: string;
+  risk_level: 'SAFE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  risk_score: number;
+  blacklisted_at: string;
+  reported_by: string;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function AssetExplorerPage() {
   const [activeTab, setActiveTab] = useState<'verified' | 'blacklisted'>('verified');
@@ -24,14 +53,24 @@ export default function AssetExplorerPage() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [verified, blacklisted, assetStats] = await Promise.all([
-        assetDatabase.getAllVerifiedAssets(),
-        assetDatabase.getAllBlacklistedAssets(),
-        assetDatabase.getAssetStats(),
+      const [verifiedResponse, blacklistedResponse, statsResponse] = await Promise.all([
+        fetch('/api/assets/verified'),
+        fetch('/api/assets/blacklisted'),
+        fetch('/api/assets/stats'),
       ]);
-      setVerifiedAssets(verified);
-      setBlacklistedAssets(blacklisted);
-      setStats(assetStats);
+
+      const [verifiedData, blacklistedData, statsData] = await Promise.all([
+        verifiedResponse.json(),
+        blacklistedResponse.json(),
+        statsResponse.json(),
+      ]);
+
+      setVerifiedAssets(verifiedData.assets || []);
+      setBlacklistedAssets(blacklistedData.assets || []);
+      setStats({
+        verifiedCount: statsData.totalVerified || 0,
+        blacklistedCount: statsData.totalBlacklisted || 0
+      });
     } catch (error) {
       console.error('Failed to load assets:', error);
     } finally {
@@ -47,8 +86,9 @@ export default function AssetExplorerPage() {
 
     setIsLoading(true);
     try {
-      const results = await assetDatabase.searchVerifiedAssets(searchQuery);
-      setVerifiedAssets(results);
+      const response = await fetch(`/api/assets/verified?q=${encodeURIComponent(searchQuery)}`);
+      const data = await response.json();
+      setVerifiedAssets(data.assets || []);
     } catch (error) {
       console.error('Search failed:', error);
     } finally {
@@ -266,12 +306,12 @@ export default function AssetExplorerPage() {
                           </h3>
                           <span
                             className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                              asset.verified_scam
+                              asset.risk_level === 'CRITICAL'
                                 ? 'bg-red-600 text-white'
                                 : 'bg-red-200 text-red-900'
                             }`}
                           >
-                            {asset.verified_scam ? 'VERIFIED SCAM' : asset.threat_level}
+                            {asset.risk_level === 'CRITICAL' ? 'VERIFIED SCAM' : asset.risk_level}
                           </span>
                         </div>
                         <p className="text-sm text-red-900 font-semibold mb-3">
@@ -290,24 +330,12 @@ export default function AssetExplorerPage() {
                       <div>
                         <span className="font-semibold text-red-950">Reported:</span>
                         <p className="text-red-900">
-                          {new Date(asset.reported_at).toLocaleDateString()} by{' '}
+                          {new Date(asset.blacklisted_at).toLocaleDateString()} by{' '}
                           {asset.reported_by || 'Community'}
                         </p>
                       </div>
                     </div>
 
-                    {asset.evidence_url && (
-                      <div className="mt-4 pt-4 border-t border-red-200">
-                        <a
-                          href={asset.evidence_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-red-700 hover:underline"
-                        >
-                          View Evidence →
-                        </a>
-                      </div>
-                    )}
                   </div>
                 ))
               )}

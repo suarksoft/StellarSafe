@@ -158,7 +158,7 @@ export default function DashboardPage() {
                   {wallet.name} • {wallet.network}
                 </p>
               </div>
-              <Button variant="outline" href="/connect-wallet">
+              <Button invert href="/connect-wallet">
                 Switch Wallet
               </Button>
             </div>
@@ -266,10 +266,10 @@ export default function DashboardPage() {
                   <Button href="/analyze">
                     Analyze Asset
                   </Button>
-                  <Button href="/demo" variant="outline">
+                  <Button href="/demo" invert>
                     Test Security
                   </Button>
-                  <Button href="/assets" variant="outline">
+                  <Button href="/assets" invert>
                     Browse Assets
                   </Button>
                 </div>

@@ -1,10 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 interface ContractDetails {
   contractId: string;
@@ -58,64 +52,49 @@ export async function GET(
       );
     }
 
-    // Get verification data
-    const { data: verificationData, error: verificationError } = await supabase
-      .from('verified_contracts')
-      .select('*')
-      .eq('contract_id', contractId)
-      .eq('network', network)
-      .single();
-
-    // Get metadata
-    const { data: metadataData, error: metadataError } = await supabase
-      .from('contract_metadata')
-      .select('*')
-      .eq('contract_id', contractId)
-      .eq('network', network)
-      .single();
-
-    // If no verification data found, return basic info
-    if (verificationError || !verificationData) {
+    // Mock verification data - PostgreSQL entegrasyonu için
+    const isVerified = contractId === 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC';
+    
+    if (!isVerified) {
       return NextResponse.json({
         contractId,
         network,
         verified: false,
-        metadata: metadataData || null,
+        metadata: null,
         message: 'Contract not verified'
       });
     }
 
     const response: ContractDetails = {
-      contractId: verificationData.contract_id,
-      network: verificationData.network,
-      verified: verificationData.verified,
-      verifiedAt: verificationData.verified_at,
-      verifiedBy: verificationData.verified_by,
-      checks: verificationData.checks,
-      wasmHash: verificationData.wasm_hash,
-      wasmSize: verificationData.wasm_size,
-      sourceHash: verificationData.source_hash,
-      sourceFiles: verificationData.source_files,
-      gitCommit: verificationData.git_commit,
-      gitRemote: verificationData.git_remote,
-      gitBranch: verificationData.git_branch,
-      rustVersion: verificationData.rust_version,
-      sorobanVersion: verificationData.soroban_version,
-      contractName: verificationData.contract_name,
+      contractId,
+      network,
+      verified: true,
+      verifiedAt: '2024-01-01T00:00:00Z',
+      verifiedBy: 'stellarsafe-cli',
+      checks: [
+        { name: 'WASM Hash Match', passed: true, message: 'WASM binary matches source code' },
+        { name: 'Source Code Available', passed: true, message: 'Source code is publicly accessible' },
+        { name: 'Build Environment', passed: true, message: 'Build environment is reproducible' }
+      ],
+      wasmHash: 'abc123def456...',
+      wasmSize: 1024,
+      sourceHash: 'def456abc123...',
+      sourceFiles: ['src/lib.rs', 'src/contract.rs'],
+      gitCommit: 'a1b2c3d4e5f6...',
+      gitRemote: 'https://github.com/example/contract',
+      gitBranch: 'main',
+      rustVersion: '1.70.0',
+      sorobanVersion: '20.0.0',
+      contractName: 'Example Contract',
+      metadata: {
+        name: 'Example Smart Contract',
+        description: 'A verified smart contract example',
+        logoUrl: 'https://example.com/logo.png',
+        websiteUrl: 'https://example.com',
+        documentationUrl: 'https://docs.example.com',
+        license: 'MIT'
+      }
     };
-
-    // Add metadata if available
-    if (metadataData) {
-      response.metadata = {
-        name: metadataData.name,
-        description: metadataData.description,
-        logoUrl: metadataData.logo_url,
-        websiteUrl: metadataData.website_url,
-        documentationUrl: metadataData.documentation_url,
-        auditReportUrl: metadataData.audit_report_url,
-        license: metadataData.license,
-      };
-    }
 
     return NextResponse.json(response);
 
@@ -156,47 +135,28 @@ export async function PUT(
     }
 
     // Check if contract is verified (only verified contracts can have metadata updated)
-    const { data: verificationData, error: verificationError } = await supabase
-      .from('verified_contracts')
-      .select('verified')
-      .eq('contract_id', contractId)
-      .eq('network', network)
-      .single();
-
-    if (verificationError || !verificationData || !verificationData.verified) {
+    const isVerified = contractId === 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC';
+    
+    if (!isVerified) {
       return NextResponse.json(
         { error: 'Only verified contracts can have metadata updated' },
         { status: 403 }
       );
     }
 
-    // Update metadata
-    const { data: updatedMetadata, error: updateError } = await supabase
-      .from('contract_metadata')
-      .upsert({
-        contract_id: contractId,
-        network,
-        name: metadata.name,
-        description: metadata.description,
-        logo_url: metadata.logoUrl,
-        website_url: metadata.websiteUrl,
-        documentation_url: metadata.documentationUrl,
-        audit_report_url: metadata.auditReportUrl,
-        license: metadata.license,
-        updated_at: new Date().toISOString(),
-      }, {
-        onConflict: 'contract_id,network'
-      })
-      .select()
-      .single();
-
-    if (updateError) {
-      console.error('Metadata update error:', updateError);
-      return NextResponse.json(
-        { error: 'Failed to update metadata' },
-        { status: 500 }
-      );
-    }
+    // Mock metadata update - PostgreSQL entegrasyonu için
+    const updatedMetadata = {
+      contract_id: contractId,
+      network,
+      name: metadata.name,
+      description: metadata.description,
+      logo_url: metadata.logoUrl,
+      website_url: metadata.websiteUrl,
+      documentation_url: metadata.documentationUrl,
+      audit_report_url: metadata.auditReportUrl,
+      license: metadata.license,
+      updated_at: new Date().toISOString(),
+    };
 
     return NextResponse.json({
       success: true,

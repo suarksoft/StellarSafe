@@ -240,7 +240,6 @@ export class TransactionAnalyzer {
       overallRisk: finalRisk,
       threats: uniqueThreats,
       recommendations,
-      simulationResult,
       metadata: {
         operationCount: operations.length,
         hasMultipleAssets: uniqueAssets.size > 1,

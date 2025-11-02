@@ -80,7 +80,12 @@ export class SimulationEngine {
         feeEstimate,
         warnings,
         errors,
-        stateChanges: sorobanResult.stateChanges || [],
+        stateChanges: (sorobanResult.stateChanges || []).map((change: any) => ({
+          type: change.type as 'data' | 'account' | 'trustline' | 'offer' | 'claimable_balance',
+          key: change.key,
+          before: change.before,
+          after: change.after
+        })),
         events: this.parseContractEvents(sorobanResult.events || []),
       };
     } catch (error) {
