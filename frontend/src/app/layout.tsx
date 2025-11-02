@@ -4,9 +4,10 @@ import '@/styles/tailwind.css'
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - Studio',
-    default: 'Studio - Award winning developer studio based in Denmark',
+    template: '%s - StellarSafe',
+    default: 'StellarSafe - Security Layer for Stellar Blockchain',
   },
+  description: 'Protect your Stellar transactions with real-time risk analysis. StellarSafe detects scams, fake tokens, and malicious contracts before you sign.',
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {

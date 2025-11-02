@@ -3,20 +3,45 @@
 import { Container } from '@/components/Container'
 import { PageIntro } from '@/components/PageIntro'
 import { RootLayout } from '@/components/RootLayout'
-import { useWallet } from '@/contexts/WalletContext'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function ConnectWalletPage() {
-  const { 
-    walletAddress, 
-    isConnected, 
-    balance, 
-    loading, 
-    error,
-    connectWallet, 
-    disconnectWallet,
-    refreshBalance 
-  } = useWallet()
+  const [walletAddress, setWalletAddress] = useState('')
+  const [isConnected, setIsConnected] = useState(false)
+  const [balance, setBalance] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  
+  // Mock wallet functions for now
+  const connectWallet = async () => {
+    setError('')
+    setLoading(true)
+    try {
+      // Simulate connection
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      setWalletAddress('GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+      setIsConnected(true)
+      setBalance(1000)
+    } catch (err) {
+      setError('Failed to connect wallet')
+    } finally {
+      setLoading(false)
+    }
+  }
+  
+  const disconnectWallet = () => {
+    setWalletAddress('')
+    setIsConnected(false)
+    setBalance(0)
+    setError('')
+  }
+  
+  const refreshBalance = async () => {
+    setLoading(true)
+    await new Promise(resolve => setTimeout(resolve, 500))
+    setBalance(Math.floor(Math.random() * 2000) + 500)
+    setLoading(false)
+  }
   
   const [connecting, setConnecting] = useState(false)
 
