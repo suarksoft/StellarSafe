@@ -18,7 +18,6 @@ const navigation = [
   {
     title: 'Company',
     links: [
-      { title: 'About', href: '/about' },
       { title: 'Partners', href: '/partners' },
       { title: 'Contact', href: '/contact' },
     ],
