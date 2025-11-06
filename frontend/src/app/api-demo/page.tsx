@@ -60,10 +60,10 @@ export default function ApiDemoPage() {
 
   return (
     <RootLayout>
-      <PageIntro eyebrow="Demo" title="StellarSafe Güvenlik Analizi Demo">
+      <PageIntro eyebrow="Demo" title="StellarSafe Security Analysis Demo">
         <p>
-          StellarSafe&apos;in güvenlik özelliklerini test edin. Stellar adresleri ve işlemleri analiz edin,
-          risk seviyelerini görün ve güvenlik önerilerini deneyimleyin.
+          Test StellarSafe&apos;s security features. Analyze Stellar addresses and transactions,
+          view risk levels and experience security recommendations.
         </p>
       </PageIntro>
 
@@ -73,7 +73,7 @@ export default function ApiDemoPage() {
             {/* Left Side - Input */}
             <div>
               <h2 className="text-2xl font-bold text-neutral-950 mb-6">
-                Güvenlik Analizi Demo
+                Security Analysis Demo
               </h2>
               
               <div className="space-y-4">
@@ -82,7 +82,7 @@ export default function ApiDemoPage() {
                   disabled={loading}
                   className="w-full"
                 >
-                  {loading && activeDemo === 'risk-analysis' ? 'Analiz Ediliyor...' : 'Risk Analizi Yap'}
+                  {loading && activeDemo === 'risk-analysis' ? 'Analyzing...' : 'Run Risk Analysis'}
                 </Button>
                 
                 <Button 
@@ -90,7 +90,7 @@ export default function ApiDemoPage() {
                   disabled={loading}
                   className="w-full"
                 >
-                  {loading && activeDemo === 'asset-verification' ? 'Doğrulanıyor...' : 'Token Doğrulama Yap'}
+                  {loading && activeDemo === 'asset-verification' ? 'Verifying...' : 'Run Asset Verification'}
                 </Button>
                 
                 <Button 
@@ -98,43 +98,43 @@ export default function ApiDemoPage() {
                   disabled={loading}
                   className="w-full"
                 >
-                  {loading && activeDemo === 'transaction-analysis' ? 'Analiz Ediliyor...' : 'İşlem Analizi Yap'}
+                  {loading && activeDemo === 'transaction-analysis' ? 'Analyzing...' : 'Run Transaction Analysis'}
                 </Button>
               </div>
 
               {/* Mock data examples */}
               <div className="mt-8">
                 <h3 className="font-semibold text-neutral-950 mb-4">
-                  Örnek Analiz Senaryoları
+                  Example Analysis Scenarios
                 </h3>
                 <div className="space-y-4">
                   <div className="bg-neutral-900 rounded-lg p-4">
-                    <div className="text-green-400 text-sm mb-2">Şüpheli Adres Senaryosu:</div>
+                    <div className="text-green-400 text-sm mb-2">Suspicious Address Scenario:</div>
                     <pre className="text-white text-xs">
-{`Adres: GCKFBEIYTKP6RCZX...
-Durum: Yeni oluşturulmuş hesap
-Risk: Yüksek
-Öneriler: İşlem yapmayın`}
+{`Address: GCKFBEIYTKP6RCZX...
+Status: Newly created account
+Risk: High
+Recommendation: Do not transact`}
                     </pre>
                   </div>
                   
                   <div className="bg-neutral-900 rounded-lg p-4">
-                    <div className="text-green-400 text-sm mb-2">Güvenli Token Senaryosu:</div>
+                    <div className="text-green-400 text-sm mb-2">Safe Token Scenario:</div>
                     <pre className="text-white text-xs">
 {`Token: USDC
-Issuer: Circle (Doğrulanmış)
-Durum: Güvenli
-TOML: Mevcut ve geçerli`}
+Issuer: Circle (Verified)
+Status: Safe
+TOML: Available and valid`}
                     </pre>
                   </div>
                   
                   <div className="bg-neutral-900 rounded-lg p-4">
-                    <div className="text-green-400 text-sm mb-2">Riskli İşlem Senaryosu:</div>
+                    <div className="text-green-400 text-sm mb-2">Risky Transaction Scenario:</div>
                     <pre className="text-white text-xs">
-{`İşlem: 1000 XLM transfer
-Alıcı: Bilinmeyen adres
-Risk: Orta seviye
-Öneri: Küçük test miktarı gönderin`}
+{`Transaction: 1000 XLM transfer
+Recipient: Unknown address
+Risk: Medium level
+Recommendation: Send small test amount`}
                     </pre>
                   </div>
                 </div>
@@ -144,20 +144,20 @@ Risk: Orta seviye
             {/* Right Side - Results */}
             <div>
               <h2 className="text-2xl font-bold text-neutral-950 mb-6">
-                Analiz Sonucu
+                Analysis Result
               </h2>
               
               <div className="bg-neutral-900 rounded-lg p-6 text-white font-mono text-sm h-96 overflow-y-auto">
                 {result ? (
                   <div>
-                    <div className="text-green-400 mb-2">{`// StellarSafe Güvenlik Analizi`}</div>
+                    <div className="text-green-400 mb-2">{`// StellarSafe Security Analysis`}</div>
                     <pre className="whitespace-pre-wrap">
                       {JSON.stringify(result, null, 2)}
                     </pre>
                   </div>
                 ) : (
                   <div className="text-neutral-400 text-center mt-20">
-                    Bir demo butonuna tıklayarak analiz sonucunu görün
+                    Click a demo button to see the analysis result
                   </div>
                 )}
               </div>
@@ -228,8 +228,8 @@ Risk: Orta seviye
         className="mt-24 sm:mt-32 lg:mt-40"
       >
         <p>
-          StellarSafe&apos;i projenize nasıl entegre edeceğinizi görün. 
-          Widget, extension ve CLI araçlarını kullanarak güvenlik katmanı ekleyin.
+          See how to integrate StellarSafe into your project. 
+          Add security layer using widgets, extensions and CLI tools.
         </p>
       </SectionIntro>
 
@@ -250,7 +250,7 @@ const stellarSafe = new StellarSafeWidget({
   network: 'mainnet'
 });
 
-// Adres analizi
+// Address analysis
 stellarSafe.analyzeAddress('GXXXXXXX...')
   .then(result => {
     if (result.riskLevel === 'HIGH') {
@@ -270,14 +270,14 @@ stellarSafe.analyzeAddress('GXXXXXXX...')
             <div className="bg-neutral-900 rounded-lg p-6 text-sm text-white font-mono overflow-x-auto">
               <pre className="whitespace-pre">
 {`// StellarSafe Browser Extension
-// Otomatik olarak Stellar işlemlerini analiz eder
+// Automatically analyzes Stellar transactions
 
-// Extension yüklendikten sonra:
-// 1. Stellar cüzdanınızı bağlayın
-// 2. İşlem yapmaya çalıştığınızda otomatik uyarı
-// 3. Risk seviyesine göre öneriler
+// After extension is installed:
+// 1. Connect your Stellar wallet
+// 2. Automatic warning when trying to transact
+// 3. Recommendations based on risk level
 
-// Desteklenen cüzdanlar:
+// Supported wallets:
 // - Freighter
 // - Albedo  
 // - Rabet`}
@@ -293,19 +293,19 @@ stellarSafe.analyzeAddress('GXXXXXXX...')
             </h3>
             <div className="bg-neutral-900 rounded-lg p-6 text-sm text-white font-mono overflow-x-auto">
               <pre className="whitespace-pre">
-{`# StellarSafe CLI kurulumu
+{`# StellarSafe CLI installation
 npm install -g @stellarsafe/cli
 
-# Kontrat doğrulama
+# Contract verification
 stellarsafe verify CDLZFC3SYJYDZT...
 
-# Adres analizi
+# Address analysis
 stellarsafe analyze GCKFBEIYTKP6JY4Q...
 
-# Toplu analiz
+# Batch analysis
 stellarsafe batch-analyze addresses.txt
 
-# Sonuçları JSON olarak export
+# Export results as JSON
 stellarsafe export --format json`}
               </pre>
             </div>
@@ -322,14 +322,14 @@ stellarsafe export --format json`}
 {`// StellarSafe Web Dashboard
 // https://stellarsafe.io/dashboard
 
-Özellikler:
-• Cüzdan bağlama (Freighter, Albedo)
-• Portfolio güvenlik analizi
-• İşlem geçmişi inceleme
-• Risk raporları
-• Güvenlik önerileri
-• Asset doğrulama
-• Gerçek zamanlı uyarılar`}
+Features:
+• Wallet connection (Freighter, Albedo)
+• Portfolio security analysis
+• Transaction history review
+• Risk reports
+• Security recommendations
+• Asset verification
+• Real-time alerts`}
               </pre>
             </div>
           </div>
@@ -338,12 +338,12 @@ stellarsafe export --format json`}
 
       <SectionIntro
         eyebrow="Comparison"
-        title="StellarSafe Özellikleri"
+        title="StellarSafe Features"
         className="mt-24 sm:mt-32 lg:mt-40"
       >
         <p>
-          StellarSafe&apos;in diğer güvenlik çözümlerinden farkını görün. 
-          Neden StellarSafe&apos;i tercih etmelisiniz?
+          See how StellarSafe differs from other security solutions. 
+          Why should you choose StellarSafe?
         </p>
       </SectionIntro>
 
@@ -353,10 +353,10 @@ stellarsafe export --format json`}
             <thead>
               <tr className="bg-neutral-50">
                 <th className="border-b border-neutral-200 px-6 py-4 text-left font-semibold text-neutral-950">
-                  Özellik
+                  Feature
                 </th>
                 <th className="border-b border-neutral-200 px-6 py-4 text-center font-semibold text-neutral-500">
-                  Diğer Çözümler
+                  Other Solutions
                 </th>
                 <th className="border-b border-neutral-200 px-6 py-4 text-center font-semibold text-blue-600">
                   StellarSafe
@@ -365,39 +365,39 @@ stellarsafe export --format json`}
             </thead>
             <tbody>
               <tr>
-                <td className="border-b border-neutral-100 px-6 py-4 font-medium">Gerçek Zamanlı Risk Analizi</td>
+                <td className="border-b border-neutral-100 px-6 py-4 font-medium">Real-time Risk Analysis</td>
                 <td className="border-b border-neutral-100 px-6 py-4 text-center text-neutral-500">❌</td>
                 <td className="border-b border-neutral-100 px-6 py-4 text-center text-green-600">✅ Multi-kaynak</td>
               </tr>
               <tr>
-                <td className="border-b border-neutral-100 px-6 py-4 font-medium">Stellar Expert Entegrasyonu</td>
+                <td className="border-b border-neutral-100 px-6 py-4 font-medium">Stellar Expert Integration</td>
                 <td className="border-b border-neutral-100 px-6 py-4 text-center text-neutral-500">❌</td>
                 <td className="border-b border-neutral-100 px-6 py-4 text-center text-green-600">✅ Native</td>
               </tr>
               <tr>
-                <td className="border-b border-neutral-100 px-6 py-4 font-medium">TOML Doğrulama</td>
+                <td className="border-b border-neutral-100 px-6 py-4 font-medium">TOML Verification</td>
                 <td className="border-b border-neutral-100 px-6 py-4 text-center text-neutral-500">❌</td>
                 <td className="border-b border-neutral-100 px-6 py-4 text-center text-green-600">✅ SEP-20</td>
               </tr>
               <tr>
                 <td className="border-b border-neutral-100 px-6 py-4 font-medium">Browser Extension</td>
                 <td className="border-b border-neutral-100 px-6 py-4 text-center text-neutral-500">❌</td>
-                <td className="border-b border-neutral-100 px-6 py-4 text-center text-green-600">✅ Otomatik</td>
+                <td className="border-b border-neutral-100 px-6 py-4 text-center text-green-600">✅ Automatic</td>
               </tr>
               <tr>
-                <td className="border-b border-neutral-100 px-6 py-4 font-medium">Kontrat Doğrulama</td>
+                <td className="border-b border-neutral-100 px-6 py-4 font-medium">Contract Verification</td>
                 <td className="border-b border-neutral-100 px-6 py-4 text-center text-neutral-500">❌</td>
                 <td className="border-b border-neutral-100 px-6 py-4 text-center text-green-600">✅ CLI Tool</td>
               </tr>
               <tr>
                 <td className="border-b border-neutral-100 px-6 py-4 font-medium">Web Dashboard</td>
                 <td className="border-b border-neutral-100 px-6 py-4 text-center text-neutral-500">❌</td>
-                <td className="border-b border-neutral-100 px-6 py-4 text-center text-green-600">✅ Tam özellikli</td>
+                <td className="border-b border-neutral-100 px-6 py-4 text-center text-green-600">✅ Full-featured</td>
               </tr>
               <tr>
-                <td className="border-b border-neutral-100 px-6 py-4 font-medium">Widget Entegrasyonu</td>
+                <td className="border-b border-neutral-100 px-6 py-4 font-medium">Widget Integration</td>
                 <td className="border-b border-neutral-100 px-6 py-4 text-center text-neutral-500">❌</td>
-                <td className="border-b border-neutral-100 px-6 py-4 text-center text-green-600">✅ Kolay kurulum</td>
+                <td className="border-b border-neutral-100 px-6 py-4 text-center text-green-600">✅ Easy setup</td>
               </tr>
             </tbody>
           </table>
@@ -406,20 +406,20 @@ stellarsafe export --format json`}
 
       <SectionIntro
         eyebrow="Get Started"
-        title="Hazır mısınız?"
+        title="Ready to get started?"
         className="mt-24 sm:mt-32 lg:mt-40"
         centered
       >
         <p>
-          StellarSafe&apos;i hemen kullanmaya başlayın. Stellar ekosisteminde güvenliğinizi artırın.
-          Ücretsiz araçlarımızla başlayın.
+          Start using StellarSafe right away. Enhance your security in the Stellar ecosystem.
+          Begin with our free tools.
         </p>
         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
-          <Button href="/dashboard">Dashboard&apos;a Git</Button>
-          <Button href="/developer" invert>Kontrat Doğrula</Button>
+          <Button href="/dashboard">Go to Dashboard</Button>
+          <Button href="/developer" invert>Verify Contract</Button>
         </div>
         <p className="mt-6 text-sm text-neutral-500">
-          Ücretsiz • Açık kaynak • Topluluk destekli
+          Free • Open source • Community supported
         </p>
       </SectionIntro>
     </RootLayout>

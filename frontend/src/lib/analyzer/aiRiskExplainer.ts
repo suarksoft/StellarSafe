@@ -3,8 +3,8 @@ import { WalletAnalysisResult } from './walletRiskAnalyzer';
 /**
  * AI Risk Explainer
  * 
- * OpenAI veya Claude API kullanarak risk analizini daha detaylı açıklar.
- * Bu opsiyonel bir özelliktir - API key olmadan da çalışır.
+ * Uses OpenAI or Claude API to explain risk analysis in more detail.
+ * This is an optional feature - works without API key as well.
  */
 
 interface AIExplanation {
@@ -16,7 +16,7 @@ interface AIExplanation {
 }
 
 /**
- * AI Açıklama Servisi
+ * AI Explanation Service
  */
 export class AIRiskExplainer {
   private apiKey?: string;
@@ -28,10 +28,10 @@ export class AIRiskExplainer {
   }
 
   /**
-   * Risk analizini AI ile açıkla
+   * Explain risk analysis with AI
    */
   async explainRisk(analysis: WalletAnalysisResult): Promise<AIExplanation | null> {
-    // API key yoksa null döndür
+    // Return null if no API key
     if (!this.apiKey) {
       console.log('⚠️ AI API key not provided - skipping AI explanation');
       return null;
@@ -50,7 +50,7 @@ export class AIRiskExplainer {
   }
 
   /**
-   * OpenAI ile açıkla
+   * Explain with OpenAI
    */
   private async explainWithOpenAI(analysis: WalletAnalysisResult): Promise<AIExplanation> {
     const prompt = this.buildPrompt(analysis);
@@ -67,7 +67,7 @@ export class AIRiskExplainer {
           {
             role: 'system',
             content: `You are a blockchain security expert specializing in Stellar network. 
-            Analyze wallet risks and provide clear, actionable advice to users in Turkish. 
+            Analyze wallet risks and provide clear, actionable advice to users in English. 
             Be honest about risks but also highlight positive indicators.`,
           },
           {
@@ -87,7 +87,7 @@ export class AIRiskExplainer {
   }
 
   /**
-   * Claude ile açıkla
+   * Explain with Claude
    */
   private async explainWithClaude(analysis: WalletAnalysisResult): Promise<AIExplanation> {
     const prompt = this.buildPrompt(analysis);
@@ -118,37 +118,37 @@ export class AIRiskExplainer {
   }
 
   /**
-   * Prompt oluştur
+   * Build prompt
    */
   private buildPrompt(analysis: WalletAnalysisResult): string {
     return `
-Stellar blockchain üzerinde bir cüzdan adresine kripto gönderilmek isteniyor. 
-Aşağıda bu adresin güvenlik analiz sonuçları var. Lütfen Türkçe olarak:
+A crypto transaction is about to be sent to a wallet address on the Stellar blockchain. 
+Below are the security analysis results for this address. Please respond in English with:
 
-1. Kısa bir özet (2-3 cümle)
-2. Detaylı analiz (risk faktörlerini açıkla)
-3. Tavsiyeler listesi
-4. Risk azaltma yöntemleri
-5. Devam edilip edilmemeli (boolean)
+1. Brief summary (2-3 sentences)
+2. Detailed analysis (explain risk factors)
+3. Recommendations list
+4. Risk mitigation methods
+5. Whether to proceed (boolean)
 
-şeklinde JSON formatında yanıt ver.
+in JSON format.
 
-ANALIZ SONUÇLARI:
-- Adres: ${analysis.address}
-- Risk Seviyesi: ${analysis.riskLevel} (${analysis.riskScore}/100)
+ANALYSIS RESULTS:
+- Address: ${analysis.address}
+- Risk Level: ${analysis.riskLevel} (${analysis.riskScore}/100)
 - Recommendation: ${analysis.recommendation}
 
-Risk Faktörleri:
-- Hesap Yaşı: ${analysis.factors.accountAge.description} (Risk: ${analysis.factors.accountAge.risk}/100)
-- Transaction Geçmişi: ${analysis.factors.transactionHistory.description} (Risk: ${analysis.factors.transactionHistory.risk}/100)
-- Hesap Aktivitesi: ${analysis.factors.accountActivity.description} (Risk: ${analysis.factors.accountActivity.risk}/100)
-- Bilinen Adres Durumu: ${analysis.factors.knownScammer.description} (Risk: ${analysis.factors.knownScammer.risk}/100)
+Risk Factors:
+- Account Age: ${analysis.factors.accountAge.description} (Risk: ${analysis.factors.accountAge.risk}/100)
+- Transaction History: ${analysis.factors.transactionHistory.description} (Risk: ${analysis.factors.transactionHistory.risk}/100)
+- Account Activity: ${analysis.factors.accountActivity.description} (Risk: ${analysis.factors.accountActivity.risk}/100)
+- Known Address Status: ${analysis.factors.knownScammer.description} (Risk: ${analysis.factors.knownScammer.risk}/100)
 - Multi-Signature: ${analysis.factors.multiSig.description} (Risk: ${analysis.factors.multiSig.risk}/100)
 
-Uyarılar: ${analysis.warnings.join(', ') || 'Yok'}
-Pozitif İşaretler: ${analysis.greenFlags.join(', ') || 'Yok'}
+Warnings: ${analysis.warnings.join(', ') || 'None'}
+Positive Indicators: ${analysis.greenFlags.join(', ') || 'None'}
 
-JSON formatı:
+JSON format:
 {
   "summary": "...",
   "detailedAnalysis": "...",
@@ -160,11 +160,11 @@ JSON formatı:
   }
 
   /**
-   * AI yanıtını parse et
+   * Parse AI response
    */
   private parseAIResponse(response: string): AIExplanation {
     try {
-      // JSON'u çıkar
+      // Extract JSON
       const jsonMatch = response.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]);
@@ -173,9 +173,9 @@ JSON formatı:
       console.error('AI response parse error:', error);
     }
 
-    // Parse başarısız olursa default değer döndür
+    // Return default value if parse fails
     return {
-      summary: 'AI analizi yapılamadı.',
+      summary: 'AI analysis could not be performed.',
       detailedAnalysis: response,
       recommendations: [],
       riskMitigation: [],
@@ -185,73 +185,73 @@ JSON formatı:
 }
 
 /**
- * Helper: Mock AI açıklama (API key olmadan test için)
+ * Helper: Mock AI explanation (for testing without API key)
  */
 export function getMockAIExplanation(analysis: WalletAnalysisResult): AIExplanation {
   const explanations = {
     critical: {
-      summary: 'Bu adres son derece tehlikeli görünüyor. Güçlü şekilde gönderim yapmaktan kaçınmanızı tavsiye ederim.',
-      detailedAnalysis: 'Analiz sonuçlarına göre bu adres birden fazla yüksek risk faktörü içeriyor. Özellikle hesap yaşının çok düşük olması ve transaction geçmişinin yetersiz olması dikkat çekici. Bu tür adresler genellikle scam veya phishing saldırılarında kullanılır.',
+      summary: 'This address appears extremely dangerous. I strongly recommend avoiding sending to it.',
+      detailedAnalysis: 'According to the analysis results, this address contains multiple high-risk factors. Particularly noteworthy are the very low account age and insufficient transaction history. Such addresses are typically used in scam or phishing attacks.',
       recommendations: [
-        'Bu adrese GÖNDERMEYİN',
-        'Alıcının kimliğini doğrulamak için alternatif kanallardan iletişim kurun',
-        'Eğer mutlaka göndermeniz gerekiyorsa çok küçük bir test miktarı gönderin',
+        'DO NOT SEND to this address',
+        'Contact through alternative channels to verify recipient identity',
+        'If you absolutely must send, use a very small test amount',
       ],
       riskMitigation: [
-        'Farklı bir iletişim kanalından alıcının adresini teyit edin',
-        'Alıcının sosyal medya hesaplarını kontrol edin',
-        'Bu işlemi ertelemeyi düşünün',
+        'Verify the recipient address through a different communication channel',
+        'Check the recipient\'s social media accounts',
+        'Consider postponing this transaction',
       ],
       shouldProceed: false,
     },
     high: {
-      summary: 'Bu adres yüksek risk içeriyor. Dikkatli olun ve küçük miktarla test yapın.',
-      detailedAnalysis: 'Adresin bazı risk faktörleri mevcut. Hesap yaşı veya transaction geçmişi yeterince güven vermiyor. Bu adrese gönderim yapmadan önce ek doğrulama yapmanız önerilir.',
+      summary: 'This address contains high risk. Be careful and test with a small amount.',
+      detailedAnalysis: 'The address has some risk factors. Account age or transaction history doesn\'t provide sufficient confidence. Additional verification is recommended before sending to this address.',
       recommendations: [
-        'Önce küçük bir test miktarı gönderin',
-        'Alıcının adresi doğrulamasını isteyin',
-        'Memo alanına açıklayıcı bilgi ekleyin',
+        'Send a small test amount first',
+        'Ask the recipient to verify the address',
+        'Add descriptive information to the memo field',
       ],
       riskMitigation: [
-        'İlk gönderiminizi minimum tutarla yapın',
-        'Başarılı test sonrası ana miktarı gönderin',
-        'Transaction hash\'ini kaydedin',
+        'Make your first send with minimum amount',
+        'Send the main amount after successful test',
+        'Record the transaction hash',
       ],
       shouldProceed: true,
     },
     medium: {
-      summary: 'Bu adres orta seviye risk içeriyor. Normal önlemlerinizi alın.',
-      detailedAnalysis: 'Adres bazı güven işaretleri gösterse de dikkatli olunması gereken noktalar var. Transaction geçmişi ve hesap aktivitesi normal görünüyor ancak ek doğrulama yapılması faydalı olabilir.',
+      summary: 'This address contains medium-level risk. Take your normal precautions.',
+      detailedAnalysis: 'While the address shows some trust indicators, there are points that require caution. Transaction history and account activity appear normal, but additional verification may be beneficial.',
       recommendations: [
-        'Transaction detaylarını kontrol edin',
-        'Memo ekleyerek gönderim yapın',
-        'Transaction hash\'ini saklayın',
+        'Check transaction details',
+        'Send with a memo',
+        'Save the transaction hash',
       ],
       riskMitigation: [
-        'Gönderim öncesi adresin doğruluğunu iki kez kontrol edin',
-        'Küçük bir test işlemi yapabilirsiniz',
+        'Double-check address accuracy before sending',
+        'You may perform a small test transaction',
       ],
       shouldProceed: true,
     },
     low: {
-      summary: 'Bu adres düşük risk içeriyor. Normal bir kullanıcı gibi görünüyor.',
-      detailedAnalysis: 'Adres çoğunlukla pozitif işaretler gösteriyor. Hesap yaşı ve transaction geçmişi güven verici. Normal bir Stellar kullanıcısı gibi görünüyor.',
+      summary: 'This address contains low risk. Appears to be a normal user.',
+      detailedAnalysis: 'The address mostly shows positive indicators. Account age and transaction history are reassuring. Appears to be a normal Stellar user.',
       recommendations: [
-        'Normal şekilde gönderim yapabilirsiniz',
-        'Gerekirse memo ekleyin',
-        'Transaction hash\'ini saklayın',
+        'You can send normally',
+        'Add memo if needed',
+        'Save the transaction hash',
       ],
-      riskMitigation: ['Standart güvenlik önlemlerini uygulayın'],
+      riskMitigation: ['Apply standard security measures'],
       shouldProceed: true,
     },
     safe: {
-      summary: 'Bu adres güvenli görünüyor. Gönderim yapabilirsiniz.',
-      detailedAnalysis: 'Adres tüm güvenlik kontrollerinden başarıyla geçti. Hesap yaşı, transaction geçmişi ve aktivite seviyeleri güvenilirlik gösteriyor. İster doğrulanmış bir exchange adresi olabilir, ister uzun süredir aktif olan bir kullanıcı.',
+      summary: 'This address appears safe. You can proceed with sending.',
+      detailedAnalysis: 'The address has successfully passed all security checks. Account age, transaction history, and activity levels indicate reliability. It could be either a verified exchange address or a long-active user.',
       recommendations: [
-        'Güvenle gönderim yapabilirsiniz',
-        'Exchange\'lere gönderiyorsanız memo eklemeyi unutmayın',
+        'You can send safely',
+        'Don\'t forget to add memo when sending to exchanges',
       ],
-      riskMitigation: ['Standart işlem prosedürünü takip edin'],
+      riskMitigation: ['Follow standard transaction procedures'],
       shouldProceed: true,
     },
   };
@@ -262,10 +262,10 @@ export function getMockAIExplanation(analysis: WalletAnalysisResult): AIExplanat
 /**
  * Example Usage:
  * 
- * // API key ile
+ * // With API key
  * const explainer = new AIRiskExplainer(process.env.OPENAI_API_KEY, 'openai');
  * const aiExplanation = await explainer.explainRisk(analysis);
  * 
- * // API key olmadan (mock)
+ * // Without API key (mock)
  * const mockExplanation = getMockAIExplanation(analysis);
  */

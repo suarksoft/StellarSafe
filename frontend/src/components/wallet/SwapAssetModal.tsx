@@ -63,17 +63,17 @@ export const SwapAssetModal: React.FC<SwapAssetModalProps> = ({
   }, [fromAmount, fromAsset, toAsset]);
 
   const handleSwap = async () => {
-    // Demo amaçlı - gerçek swap işlemi yapmıyor
-    setError('Bu özellik şu anda demo amaçlıdır. Gerçek swap işlemleri için Stellar DEX veya diğer platformları kullanabilirsiniz.');
+    // Demo purpose - not performing real swap operation
+    setError('This feature is currently for demo purposes. You can use Stellar DEX or other platforms for real swap transactions.');
     return;
     
-    // Aşağıdaki kod gerçek swap işlemi için saklanmıştır
+    // The following code is reserved for real swap operations
     /*
     if (!wallet || !fromAmount || !toAmount) {
-      setError('Lütfen tüm alanları doldurun');
+      setError('Please fill in all fields');
       return;
     }
-    // ... gerçek swap kodu buraya gelecek
+    // ... real swap code will go here
     */
   };
 
@@ -202,8 +202,8 @@ export const SwapAssetModal: React.FC<SwapAssetModalProps> = ({
             {/* Info */}
             <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-sm text-yellow-800">
-                ⚠️ Bu swap özelliği şu anda demo amaçlıdır. Gerçek işlemler yapılmaz.
-                Stellar DEX veya diğer platformları kullanarak gerçek swap işlemleri yapabilirsiniz.
+                ⚠️ This swap feature is currently for demo purposes. No real transactions are performed.
+                You can use Stellar DEX or other platforms for real swap transactions.
               </p>
             </div>
 

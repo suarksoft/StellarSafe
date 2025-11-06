@@ -7,7 +7,7 @@ import { getRiskLevelColor, getRiskLevelEmoji } from '@/lib/analyzer/walletRiskA
 /**
  * Analytics Dashboard Component
  * 
- * Risk analiz istatistiklerini ve log'ları gösterir.
+ * Shows risk analysis statistics and logs.
  */
 export const AnalyticsDashboard: React.FC = () => {
   const { getStats, getLogs, clearLogs, downloadCSV } = useAnalyticsLogger();
@@ -27,21 +27,21 @@ export const AnalyticsDashboard: React.FC = () => {
   }, [loadData]);
 
   const handleClearLogs = () => {
-    if (confirm('Tüm analiz log\'larını silmek istediğinize emin misiniz?')) {
+    if (confirm('Are you sure you want to delete all analysis logs?')) {
       clearLogs();
       loadData();
     }
   };
 
   if (!stats) {
-    return <div className="p-4 text-neutral-600">Yükleniyor...</div>;
+    return <div className="p-4 text-neutral-600">Loading...</div>;
   }
 
   return (
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-neutral-950">
-          📊 Risk Analiz İstatistikleri
+          📊 Risk Analysis Statistics
         </h2>
         <div className="flex space-x-2">
           <button
