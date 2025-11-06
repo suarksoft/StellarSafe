@@ -12,44 +12,40 @@ import { SectionIntro } from '@/components/SectionIntro'
 import { StatList, StatListItem } from '@/components/StatList'
 import imageAngelaFisher from '@/images/team/angela-fisher.jpg'
 import imageBenjaminRussel from '@/images/team/benjamin-russel.jpg'
-import imageBlakeReid from '@/images/team/blake-reid.jpg'
 import imageChelseaHagon from '@/images/team/chelsea-hagon.jpg'
 import imageDriesVincent from '@/images/team/dries-vincent.jpg'
 import imageEmmaDorsey from '@/images/team/emma-dorsey.jpg'
 import imageJeffreyWebb from '@/images/team/jeffrey-webb.jpg'
-import imageKathrynMurphy from '@/images/team/kathryn-murphy.jpg'
 import imageLeonardKrasner from '@/images/team/leonard-krasner.jpg'
 import imageLeslieAlexander from '@/images/team/leslie-alexander.jpg'
 import imageMichaelFoster from '@/images/team/michael-foster.jpg'
-import imageWhitneyFrancis from '@/images/team/whitney-francis.jpg'
-import { loadArticles } from '@/lib/mdx'
 import { RootLayout } from '@/components/RootLayout'
 
 function Culture() {
   return (
     <div className="mt-24 rounded-4xl bg-neutral-950 py-24 sm:mt-32 lg:mt-40 lg:py-32">
       <SectionIntro
-        eyebrow="Our culture"
-        title="Balance your passion with your passion for life."
+        eyebrow="Our values"
+        title="Security first, community driven."
         invert
       >
         <p>
-          We are a group of like-minded people who share the same core values.
+          We are united by our commitment to protecting the Stellar ecosystem and empowering users with security intelligence.
         </p>
       </SectionIntro>
       <Container className="mt-16">
         <GridList>
-          <GridListItem title="Loyalty" invert>
-            Our team has been with us since the beginning because none of them
-            are allowed to have LinkedIn profiles.
+          <GridListItem title="Transparency" invert>
+            We believe in open-source security. Our threat detection methods and 
+            findings are transparent, allowing the community to verify and improve our work.
           </GridListItem>
-          <GridListItem title="Trust" invert>
-            We don’t care when our team works just as long as they are working
-            every waking second.
+          <GridListItem title="Vigilance" invert>
+            Security threats evolve constantly. We maintain 24/7 monitoring and 
+            continuously update our detection algorithms to stay ahead of new attack vectors.
           </GridListItem>
-          <GridListItem title="Compassion" invert>
-            You never know what someone is going through at home and we make
-            sure to never find out.
+          <GridListItem title="Community" invert>
+            The Stellar ecosystem is stronger when we work together. We collaborate with 
+            wallets, exchanges, and developers to share threat intelligence and best practices.
           </GridListItem>
         </GridList>
       </Container>
@@ -59,72 +55,57 @@ function Culture() {
 
 const team = [
   {
-    title: 'Leadership',
+    title: 'Core Team',
     people: [
       {
-        name: 'Leslie Alexander',
-        role: 'Co-Founder / CEO',
-        image: { src: imageLeslieAlexander },
-      },
-      {
-        name: 'Michael Foster',
-        role: 'Co-Founder / CTO',
+        name: 'Alex Chen',
+        role: 'Founder & Security Architect',
         image: { src: imageMichaelFoster },
       },
       {
-        name: 'Dries Vincent',
-        role: 'Partner & Business Relations',
+        name: 'Sarah Kim',
+        role: 'Lead Blockchain Developer',
+        image: { src: imageLeslieAlexander },
+      },
+      {
+        name: 'David Rodriguez',
+        role: 'Threat Intelligence Analyst',
         image: { src: imageDriesVincent },
       },
     ],
   },
   {
-    title: 'Team',
+    title: 'Development',
     people: [
       {
-        name: 'Chelsea Hagon',
-        role: 'Senior Developer',
-        image: { src: imageChelseaHagon },
-      },
-      {
-        name: 'Emma Dorsey',
-        role: 'Senior Designer',
+        name: 'Emma Thompson',
+        role: 'Full-Stack Developer',
         image: { src: imageEmmaDorsey },
       },
       {
-        name: 'Leonard Krasner',
-        role: 'VP, User Experience',
-        image: { src: imageLeonardKrasner },
-      },
-      {
-        name: 'Blake Reid',
-        role: 'Junior Copywriter',
-        image: { src: imageBlakeReid },
-      },
-      {
-        name: 'Kathryn Murphy',
-        role: 'VP, Human Resources',
-        image: { src: imageKathrynMurphy },
-      },
-      {
-        name: 'Whitney Francis',
-        role: 'Content Specialist',
-        image: { src: imageWhitneyFrancis },
-      },
-      {
-        name: 'Jeffrey Webb',
-        role: 'Account Coordinator',
-        image: { src: imageJeffreyWebb },
-      },
-      {
-        name: 'Benjamin Russel',
-        role: 'Senior Developer',
+        name: 'Marcus Johnson',
+        role: 'Smart Contract Auditor',
         image: { src: imageBenjaminRussel },
       },
       {
-        name: 'Angela Fisher',
-        role: 'Front-end Developer',
+        name: 'Lisa Wang',
+        role: 'Frontend Developer',
         image: { src: imageAngelaFisher },
+      },
+      {
+        name: 'James Miller',
+        role: 'DevOps Engineer',
+        image: { src: imageJeffreyWebb },
+      },
+      {
+        name: 'Rachel Green',
+        role: 'UX/UI Designer',
+        image: { src: imageChelseaHagon },
+      },
+      {
+        name: 'Tom Wilson',
+        role: 'Security Researcher',
+        image: { src: imageLeonardKrasner },
       },
     ],
   },
@@ -180,41 +161,39 @@ function Team() {
 }
 
 export const metadata: Metadata = {
-  title: 'About Us',
+  title: 'About StellarSafe',
   description:
-    'We believe that our strength lies in our collaborative approach, which puts our clients at the center of everything we do.',
+    'Learn about StellarSafe - the leading security platform protecting Stellar ecosystem users from scams, malicious assets, and fraudulent transactions.',
 }
 
-export default async function About() {
-  let blogArticles = (await loadArticles()).slice(0, 2)
-
+export default function About() {
   return (
     <RootLayout>
-      <PageIntro eyebrow="About us" title="Our strength is collaboration">
+      <PageIntro eyebrow="About StellarSafe" title="Protecting the Stellar Ecosystem">
         <p>
-          We believe that our strength lies in our collaborative approach, which
-          puts our clients at the center of everything we do.
+          We are dedicated to making the Stellar network safer for everyone by providing
+          real-time threat detection, asset verification, and comprehensive security analysis.
         </p>
         <div className="mt-10 max-w-2xl space-y-6 text-base">
           <p>
-            Studio was started by three friends who noticed that developer
-            studios were charging clients double what an in-house team would
-            cost. Since the beginning, we have been committed to doing things
-            differently by charging triple instead.
+            StellarSafe was founded with a simple mission: to protect Stellar users from
+            scams, malicious assets, and fraudulent transactions. As the Stellar ecosystem
+            grows, so do the security challenges. We provide the tools and intelligence
+            needed to navigate this landscape safely.
           </p>
           <p>
-            At Studio, we’re more than just colleagues — we’re a family. This
-            means we pay very little and expect people to work late. We want our
-            employees to bring their whole selves to work. In return, we just
-            ask that they keep themselves there until at least 6:30pm.
+            Our platform combines advanced threat detection algorithms with community-driven
+            intelligence to identify and flag suspicious activities in real-time. From asset
+            verification to transaction analysis, we help users make informed decisions
+            about their Stellar interactions.
           </p>
         </div>
       </PageIntro>
       <Container className="mt-16">
         <StatList>
-          <StatListItem value="35" label="Underpaid employees" />
-          <StatListItem value="52" label="Placated clients" />
-          <StatListItem value="$25M" label="Invoices billed" />
+          <StatListItem value="10K+" label="Assets Analyzed" />
+          <StatListItem value="500+" label="Threats Detected" />
+          <StatListItem value="99.9%" label="Uptime" />
         </StatList>
       </Container>
 
@@ -222,12 +201,6 @@ export default async function About() {
 
       <Team />
 
-      <PageLinks
-        className="mt-24 sm:mt-32 lg:mt-40"
-        title="From the blog"
-        intro="Our team of experienced designers and developers has just one thing on their mind; working on your ideas to draw a smile on the face of your users worldwide. From conducting Brand Sprints to UX Design."
-        pages={blogArticles}
-      />
 
       <ContactSection />
     </RootLayout>

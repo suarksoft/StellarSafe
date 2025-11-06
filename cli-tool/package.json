@@ -1,6 +1,6 @@
 {
   "name": "@devrunnel/stellarsafe-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI tool for verifying Soroban smart contracts on StellarSafe",
   "main": "dist/index.js",
   "bin": {
@@ -46,6 +46,6 @@
   "bugs": {
     "url": "https://github.com/stellarsafe/stellarsafe/issues"
   },
-  "homepage": "https://stellarsafe.io"
+  "homepage": "https://stellar-safe-liard.vercel.app/"
 }
 
