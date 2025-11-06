@@ -1,6 +1,6 @@
 # StellarSafe - Stellar Blockchain Güvenlik Platformu
 
-![StellarSafe Logo](https://via.placeholder.com/800x200/1e293b/ffffff?text=StellarSafe)
+https://stellar-safe-liard.vercel.app
 
 ## 🌟 Proje Hakkında
 
@@ -378,13 +378,7 @@ soroban contract build
 
 Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
 
-## 📞 İletişim
 
-- **Website**: https://stellarsafe.io
-- **Email**: info@stellarsafe.io
-- **Twitter**: @StellarSafe
-- **Discord**: https://discord.gg/stellarsafe
-- **GitHub**: https://github.com/stellarsafe
 
 ## 🙏 Teşekkürler
 
