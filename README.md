@@ -136,12 +136,12 @@ psql stellarsafe < database-schema.sql
 ### 3. Environment Variables
 ```bash
 # frontend/.env.local
-DATABASE_URL="postgresql://postgres:Option0601@localhost:5432/stellarsafe"
+DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/stellarsafe"
 POSTGRES_HOST="localhost"
 POSTGRES_PORT="5432"
 POSTGRES_DB="stellarsafe"
 POSTGRES_USER="postgres"
-POSTGRES_PASSWORD="Option0601"
+POSTGRES_PASSWORD="YOUR_PASSWORD"
 
 # Stellar API Keys (opsiyonel)
 STELLAR_EXPERT_API_KEY="your_key_here"
